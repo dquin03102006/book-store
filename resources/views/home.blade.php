@@ -107,6 +107,7 @@
                 <p class="price">
                     {{ number_format($book->price, 0, ',', '.') }} VNĐ
                 </p>
+                <a href="/book/{{ $book->id }}">Xem chi tiết</a>
             </div>
             @endforeach
 
