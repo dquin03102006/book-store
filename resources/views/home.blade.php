@@ -352,6 +352,14 @@
                 width: 100%;
             }
         }
+
+        .book-image {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
     </style>
 
 
@@ -482,9 +490,10 @@
 
             <div class="product">
 
-                <div class="book-placeholder">
-                    Hình ảnh sách
-                </div>
+                <img
+                    src="{{ asset('images/books/' . $book->image) }}"
+                    alt="{{ $book->title }}"
+                    class="book-image">
 
                 <h3>{{ $book->title }}</h3>
 
