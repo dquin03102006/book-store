@@ -97,6 +97,45 @@
 
             <button type="submit">Tìm kiếm</button>
         </form>
+        <form action="/" method="GET">
+            <select name="category">
+                <option value="">Tất cả danh mục</option>
+
+                @foreach ($categories as $item)
+                <option value="{{ $item->id }}"
+                    {{ ($category ?? '') == $item->id ? 'selected' : '' }}>
+                    {{ $item->name }}
+                </option>
+                @endforeach
+            </select>
+
+            <select name="price">
+                <option value="">Tất cả mức giá</option>
+                <option value="under100" {{ ($price ?? '') == 'under100' ? 'selected' : '' }}>
+                    Dưới 100.000đ
+                </option>
+                <option value="100to150" {{ ($price ?? '') == '100to150' ? 'selected' : '' }}>
+                    100.000đ - 150.000đ
+                </option>
+                <option value="over150" {{ ($price ?? '') == 'over150' ? 'selected' : '' }}>
+                    Trên 150.000đ
+                </option>
+            </select>
+
+            <button type="submit">Lọc</button>
+            <select name="sort">
+                <option value="">Mặc định</option>
+                <option value="price_asc" {{ ($sort ?? '') == 'price_asc' ? 'selected' : '' }}>
+                    Giá thấp → cao
+                </option>
+                <option value="price_desc" {{ ($sort ?? '') == 'price_desc' ? 'selected' : '' }}>
+                    Giá cao → thấp
+                </option>
+                <option value="latest" {{ ($sort ?? '') == 'latest' ? 'selected' : '' }}>
+                    Mới nhất
+                </option>
+            </select>
+        </form>
     </header>
 
     <section class="banner">
