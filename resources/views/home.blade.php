@@ -88,6 +88,15 @@
             <a href="#">Giỏ hàng</a>
             <a href="#">Đăng nhập</a>
         </nav>
+        <form action="/" method="GET">
+            <input
+                type="text"
+                name="keyword"
+                placeholder="Tìm tên sách hoặc tác giả..."
+                value="{{ $keyword ?? '' }}">
+
+            <button type="submit">Tìm kiếm</button>
+        </form>
     </header>
 
     <section class="banner">

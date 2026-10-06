@@ -8,8 +8,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $books = Book::latest()->get();
+        $keyword = request('keyword');
 
-        return view('home', compact('books'));
+        $books = Book::when($keyword, function ($query) use ($keyword) {
+            $query->where('title', 'like', '%' . $keyword . '%')
+                ->orWhere('author', 'like', '%' . $keyword . '%');
+        })->latest()->get();
+
+        return view('home', compact('books', 'keyword'));
     }
 }
