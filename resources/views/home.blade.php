@@ -14,7 +14,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f7f4ef;
+            background: #fffcf5;
             color: #2f2f2f;
         }
 
@@ -32,10 +32,25 @@
         }
 
         .logo {
-            font-size: 25px;
-            font-weight: bold;
-            color: #4b3621;
-            white-space: nowrap;
+            width: 120px;
+            height: 55px;
+            overflow: hidden;
+            flex-shrink: 0;
+            margin-left: -35px;
+        }
+
+        .logo a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo img {
+            width: 120px;
+            height: 55px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
         nav {
@@ -53,7 +68,7 @@
         }
 
         nav a:hover {
-            color: #37192C;
+            color: #212842;
         }
 
         .search-form {
@@ -72,13 +87,13 @@
         }
 
         .search-form input:focus {
-            border-color: #37192C;
+            border-color: #212842;
         }
 
         button {
             border: none;
             cursor: pointer;
-            background: #4b3621;
+            background: #212842;
             color: white;
             padding: 10px 18px;
             border-radius: 22px;
@@ -87,20 +102,34 @@
         }
 
         button:hover {
-            background: #a66a3f;
+            background: #BED9F4;
         }
 
         .cart-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #37192C;
+            color: #212842;
             text-decoration: none;
             transition: 0.2s;
         }
 
         .cart-icon:hover {
-            color: #37192C;
+            color: #212842;
+            transform: scale(1.1);
+        }
+
+        .user-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #212842;
+            text-decoration: none;
+            margin-left: 8px;
+            transition: 0.2s;
+        }
+
+        .user-icon:hover {
             transform: scale(1.1);
         }
 
@@ -145,7 +174,7 @@
         }
 
         select:focus {
-            border-color: #37192C;
+            border-color: #212842;
         }
 
         /* PRODUCTS */
@@ -163,7 +192,7 @@
         .section-title h2 {
             margin: 0;
             font-size: 27px;
-            color: #4b3621;
+            color: #212842;
         }
 
         .product-list {
@@ -213,7 +242,7 @@
         }
 
         .price {
-            color: #37192C;
+            color: #212842;
             font-size: 18px;
             font-weight: bold;
             margin: 12px 0 18px;
@@ -223,7 +252,7 @@
             display: inline-block;
             padding: 9px 18px;
             border-radius: 20px;
-            background: #4b3621;
+            background: #212842;
             color: white;
             text-decoration: none;
             font-size: 14px;
@@ -231,23 +260,32 @@
         }
 
         .detail-btn:hover {
-            background: #a66a3f;
+            background: #BED9F4;
         }
 
         /* FOOTER */
         footer {
             margin-top: 50px;
-            background: #37192C;
+            background: #212842;
             color: #FFF3E5;
             padding: 45px 60px 20px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
             gap: 40px;
+            width: 100%;
             max-width: 1200px;
-            margin: auto;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .footer-column {
+            min-width: 0;
         }
 
         .footer-column h3 {
@@ -257,30 +295,61 @@
         }
 
         .footer-column p {
-            color: #e8d8d0;
+            color: #FFF3E5;
             line-height: 1.7;
             font-size: 14px;
+            overflow-wrap: break-word;
         }
 
         .footer-column a {
             display: block;
-            color: #e8d8d0;
+            color: #FFF3E5;
             text-decoration: none;
             margin-bottom: 10px;
             font-size: 14px;
         }
 
         .footer-column a:hover {
-            color: #ffffff;
+            color: #FFF3E5;
+        }
+
+        .footer-logo {
+            margin: 0;
+            width: 160px;
+            height: auto;
+            overflow: visible;
+        }
+
+        .footer-logo img {
+            width: 160px;
+            height: auto;
+            display: block;
         }
 
         .footer-bottom {
             margin-top: 35px;
             padding-top: 18px;
-            border-top: 1px solid rgba(255, 243, 229, 0.2);
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
             text-align: center;
-            color: #d8c5bd;
+            color: #FFF3E5;
             font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            footer {
+                padding: 35px 25px 20px;
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 25px;
+                width: 100%;
+            }
+
+            .footer-column {
+                width: 100%;
+            }
         }
 
         /* RESPONSIVE */
@@ -368,12 +437,16 @@
 <body>
     <!-- HEADER -->
     <header>
-        <div class="logo">BOOK STORE</div>
+        <div class="logo">
+            <a href="/">
+                <img src="{{ asset('images/logo.png') }}" alt="Nhỏ xíu">
+            </a>
+        </div>
 
         <nav>
             <a href="/">Trang chủ</a>
+            <a href="/gioi-thieu">Giới thiệu</a>
             <a href="#">Sản phẩm</a>
-            <a href="#">Đăng nhập</a>
         </nav>
 
         <form class="search-form" action="/" method="GET">
@@ -390,6 +463,19 @@
                 <circle cx="9" cy="20" r="1"></circle>
                 <circle cx="19" cy="20" r="1"></circle>
                 <path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"></path>
+            </svg>
+        </a>
+        <a href="#" class="user-icon" title="Đăng nhập">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="25" height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
             </svg>
         </a>
     </header>
@@ -524,7 +610,9 @@
         <div class="footer-content">
 
             <div class="footer-column">
-                <h3>BOOK STORE</h3>
+                <h3 class="footer-logo">
+                    <img src="{{ asset('images/logofooter.png') }}" alt="Nhỏ xíu">
+                </h3>
                 <p>
                     Nơi bạn tìm thấy những cuốn sách hay
                     và những cảm hứng mới mỗi ngày.
@@ -548,15 +636,15 @@
 
             <div class="footer-column">
                 <h3>Liên hệ</h3>
-                <p>Email: bookstore@gmail.com</p>
-                <p>Điện thoại: 0123 456 789</p>
+                <p>Email: tiemsachnho@gmail.com</p>
+                <p>Điện thoại: 0900 123 456</p>
                 <p>TP. Hồ Chí Minh, Việt Nam</p>
             </div>
 
         </div>
 
         <div class="footer-bottom">
-            © {{ date('Y') }} BOOK STORE. All rights reserved.
+            © {{ date('Y') }} TIỆM SÁCH NHỎ. All rights reserved.
         </div>
     </footer>
 
