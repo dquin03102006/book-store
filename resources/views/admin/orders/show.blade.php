@@ -23,7 +23,7 @@
 
         .header {
             height: 78px;
-            background: #fff;
+            background: #ffffff;
             border-bottom: 1px solid #eee8dc;
             display: flex;
             align-items: center;
@@ -32,6 +32,12 @@
             position: sticky;
             top: 0;
             z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
         .logo img {
@@ -58,7 +64,7 @@
         .logout-btn {
             border: none;
             background: #1f2a44;
-            color: #fff;
+            color: #ffffff;
             padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
@@ -102,7 +108,7 @@
         .back-btn {
             display: inline-block;
             padding: 11px 18px;
-            background: #fff;
+            background: #ffffff;
             color: #1f2a44;
             border: 1px solid #ddd6c9;
             border-radius: 8px;
@@ -137,7 +143,7 @@
         /* ================= CARD ================= */
 
         .card {
-            background: #fff;
+            background: #ffffff;
             border: 1px solid #eee8dc;
             border-radius: 14px;
             box-shadow: 0 3px 12px rgba(31, 42, 68, 0.04);
@@ -148,7 +154,7 @@
         .card-header {
             padding: 20px 22px;
             border-bottom: 1px solid #eee8dc;
-            background: #fff;
+            background: #ffffff;
         }
 
         .card-header h2 {
@@ -379,7 +385,7 @@
             padding: 12px 13px;
             border: 1px solid #ddd6c9;
             border-radius: 8px;
-            background: #fff;
+            background: #ffffff;
             color: #444;
             outline: none;
             font-size: 14px;
@@ -396,7 +402,7 @@
             border: none;
             border-radius: 8px;
             background: #1f2a44;
-            color: #fff;
+            color: #ffffff;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
@@ -413,7 +419,6 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-
         }
 
         @media (max-width: 768px) {
@@ -496,7 +501,10 @@
 
             </div>
 
-            <a href="{{ route('admin.orders.index') }}" class="back-btn">
+            <a
+                href="{{ route('admin.orders.index') }}"
+                class="back-btn"
+            >
                 ← Danh sách đơn hàng
             </a>
 
@@ -520,7 +528,7 @@
 
             <div>
 
-                {{-- THÔNG TIN ĐƠN --}}
+                {{-- THÔNG TIN ĐƠN HÀNG --}}
 
                 <div class="card">
 
@@ -567,7 +575,13 @@
                             </span>
 
                             <span class="info-value">
-                                {{ $order->payment_method }}
+
+                                @if(strtolower($order->payment_method ?? '') === 'cod')
+                                    COD
+                                @else
+                                    {{ strtoupper($order->payment_method ?? '') }}
+                                @endif
+
                             </span>
 
                         </div>
@@ -622,7 +636,7 @@
                 </div>
 
 
-                {{-- KHÁCH HÀNG --}}
+                {{-- THÔNG TIN KHÁCH HÀNG --}}
 
                 <div class="card">
 
@@ -674,7 +688,7 @@
                 </div>
 
 
-                {{-- SẢN PHẨM --}}
+                {{-- SẢN PHẨM TRONG ĐƠN --}}
 
                 <div class="card">
 
@@ -715,16 +729,11 @@
                                 <div class="product-info">
 
                                     <div class="product-name">
-
                                         {{ $item->book->title ?? 'Sản phẩm' }}
-
                                     </div>
 
                                     <div class="product-meta">
-
-                                        Số lượng:
-                                        {{ $item->quantity }}
-
+                                        Số lượng: {{ $item->quantity }}
                                     </div>
 
                                 </div>
@@ -733,15 +742,11 @@
                                 <div class="product-price">
 
                                     <div class="unit-price">
-
                                         {{ number_format($item->price, 0, ',', '.') }} đ / cuốn
-
                                     </div>
 
                                     <div class="total-price">
-
                                         {{ number_format($item->price * $item->quantity, 0, ',', '.') }} đ
-
                                     </div>
 
                                 </div>
@@ -797,6 +802,7 @@
                             <span class="status-label">
                                 Trạng thái hiện tại
                             </span>
+
 
                             @if($order->status === 'pending')
 
@@ -885,7 +891,10 @@
 
                             </select>
 
-                            <button type="submit" class="update-btn">
+                            <button
+                                type="submit"
+                                class="update-btn"
+                            >
                                 Cập nhật trạng thái
                             </button>
 
@@ -896,7 +905,7 @@
                 </div>
 
 
-                {{-- TÓM TẮT --}}
+                {{-- TÓM TẮT ĐƠN HÀNG --}}
 
                 <div class="card">
 
@@ -943,7 +952,13 @@
                             </span>
 
                             <span class="info-value">
-                                {{ $order->payment_method }}
+
+                                @if(strtolower($order->payment_method ?? '') === 'cod')
+                                    COD
+                                @else
+                                    {{ strtoupper($order->payment_method ?? '') }}
+                                @endif
+
                             </span>
 
                         </div>
@@ -955,7 +970,10 @@
                                 Tổng cộng
                             </span>
 
-                            <span class="info-value" style="font-size: 18px; color: #1f2a44;">
+                            <span
+                                class="info-value"
+                                style="font-size: 18px; color: #1f2a44;"
+                            >
                                 {{ number_format($order->total_amount, 0, ',', '.') }} đ
                             </span>
 

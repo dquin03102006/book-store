@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +34,12 @@
             z-index: 10;
         }
 
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
         .logo img {
             width: 105px;
             height: auto;
@@ -57,7 +64,7 @@
         .logout-btn {
             border: none;
             background: #1f2a44;
-            color: white;
+            color: #ffffff;
             padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
@@ -142,7 +149,7 @@
             padding: 11px 13px;
             border: 1px solid #ddd6c9;
             border-radius: 8px;
-            background: #fff;
+            background: #ffffff;
             color: #444;
             font-size: 14px;
             outline: none;
@@ -157,7 +164,7 @@
             border: none;
             border-radius: 8px;
             background: #1f2a44;
-            color: #fff;
+            color: #ffffff;
             cursor: pointer;
             font-size: 14px;
         }
@@ -171,7 +178,7 @@
             border: 1px solid #ddd6c9;
             border-radius: 8px;
             color: #555;
-            background: #fff;
+            background: #ffffff;
             text-decoration: none;
             font-size: 14px;
         }
@@ -316,6 +323,7 @@
             text-decoration: none;
             font-size: 13px;
             transition: 0.2s;
+            white-space: nowrap;
         }
 
         .detail-btn:hover {
@@ -400,6 +408,7 @@
 <body>
 
     {{-- ================= HEADER ================= --}}
+
     <header class="header">
 
         <a href="/admin" class="logo">
@@ -414,11 +423,13 @@
             </div>
 
             <form action="/admin/logout" method="POST">
+
                 @csrf
 
                 <button type="submit" class="logout-btn">
                     Đăng xuất
                 </button>
+
             </form>
 
         </div>
@@ -427,11 +438,13 @@
 
 
     {{-- ================= CONTENT ================= --}}
+
     <main class="container">
 
         <div class="page-top">
 
             <div>
+
                 <h1 class="page-title">
                     Quản lý đơn hàng
                 </h1>
@@ -439,6 +452,7 @@
                 <p class="page-description">
                     Theo dõi và cập nhật trạng thái các đơn hàng của khách hàng.
                 </p>
+
             </div>
 
             <a href="/admin" class="back-btn">
@@ -449,6 +463,7 @@
 
 
         {{-- ================= FILTER ================= --}}
+
         <div class="filter-box">
 
             <h3 class="filter-title">
@@ -467,28 +482,38 @@
                         Tất cả trạng thái
                     </option>
 
-                    <option value="pending"
-                        {{ request('status') == 'pending' ? 'selected' : '' }}>
+                    <option
+                        value="pending"
+                        {{ request('status') == 'pending' ? 'selected' : '' }}
+                    >
                         Chờ xử lý
                     </option>
 
-                    <option value="processing"
-                        {{ request('status') == 'processing' ? 'selected' : '' }}>
+                    <option
+                        value="processing"
+                        {{ request('status') == 'processing' ? 'selected' : '' }}
+                    >
                         Đang xử lý
                     </option>
 
-                    <option value="shipped"
-                        {{ request('status') == 'shipped' ? 'selected' : '' }}>
+                    <option
+                        value="shipped"
+                        {{ request('status') == 'shipped' ? 'selected' : '' }}
+                    >
                         Đang giao
                     </option>
 
-                    <option value="completed"
-                        {{ request('status') == 'completed' ? 'selected' : '' }}>
+                    <option
+                        value="completed"
+                        {{ request('status') == 'completed' ? 'selected' : '' }}
+                    >
                         Hoàn thành
                     </option>
 
-                    <option value="cancelled"
-                        {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                    <option
+                        value="cancelled"
+                        {{ request('status') == 'cancelled' ? 'selected' : '' }}
+                    >
                         Đã hủy
                     </option>
 
@@ -498,7 +523,10 @@
                     Lọc đơn hàng
                 </button>
 
-                <a href="{{ route('admin.orders.index') }}" class="reset-btn">
+                <a
+                    href="{{ route('admin.orders.index') }}"
+                    class="reset-btn"
+                >
                     Đặt lại
                 </a>
 
@@ -508,6 +536,7 @@
 
 
         {{-- ================= TABLE ================= --}}
+
         <div class="table-box">
 
             <div class="table-header">
@@ -550,11 +579,16 @@
 
                                 <tr>
 
+                                    {{-- MÃ ĐƠN --}}
+
                                     <td>
                                         <span class="order-id">
                                             #{{ $order->id }}
                                         </span>
                                     </td>
+
+
+                                    {{-- KHÁCH HÀNG --}}
 
                                     <td>
                                         <span class="customer-name">
@@ -562,11 +596,17 @@
                                         </span>
                                     </td>
 
+
+                                    {{-- SĐT --}}
+
                                     <td>
                                         <span class="phone">
                                             {{ $order->shipping_phone }}
                                         </span>
                                     </td>
+
+
+                                    {{-- TỔNG TIỀN --}}
 
                                     <td>
                                         <span class="price">
@@ -574,9 +614,17 @@
                                         </span>
                                     </td>
 
+
+                                    {{-- THANH TOÁN --}}
+
                                     <td>
-                                        {{ $order->payment_method }}
+                                        <strong>
+                                            {{ strtoupper($order->payment_method ?? '') }}
+                                        </strong>
                                     </td>
+
+
+                                    {{-- TRẠNG THÁI --}}
 
                                     <td>
 
@@ -614,9 +662,15 @@
 
                                     </td>
 
+
+                                    {{-- NGÀY ĐẶT --}}
+
                                     <td>
                                         {{ $order->created_at->format('d/m/Y H:i') }}
                                     </td>
+
+
+                                    {{-- THAO TÁC --}}
 
                                     <td>
 
@@ -639,10 +693,15 @@
 
                 </div>
 
+
                 {{-- PAGINATION --}}
+
                 <div class="pagination-box">
+
                     {{ $orders->links() }}
+
                 </div>
+
 
             @else
 
@@ -665,4 +724,5 @@
     </main>
 
 </body>
+
 </html>
