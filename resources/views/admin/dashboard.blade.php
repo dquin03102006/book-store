@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Tiệm Sách Nhỏ</title>
 
     <style>
         * {
@@ -15,34 +15,65 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
+            background: #fdfbf6;
+            color: #1f2a44;
         }
 
+        /* ================= HEADER ================= */
+
         .header {
-            background: #333;
-            color: white;
-            padding: 20px 40px;
+            height: 82px;
+            background: #ffffff;
+            padding: 0 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(31, 42, 68, 0.08);
         }
 
-        .header h2 {
-            margin: 0;
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 105px;
+            height: auto;
+            display: block;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-label {
+            font-size: 15px;
+            color: #555;
         }
 
         .logout {
-            background: white;
-            color: #333;
+            background: #1f2a44;
+            color: white;
             border: none;
-            padding: 9px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 25px;
             cursor: pointer;
+            font-size: 14px;
         }
 
+        .logout:hover {
+            background: #2f3d5d;
+        }
+
+        /* ================= CONTENT ================= */
+
         .container {
-            padding: 40px;
+            max-width: 1500px;
+            margin: auto;
+            padding: 40px 50px 60px;
         }
 
         .welcome {
@@ -50,111 +81,173 @@
         }
 
         .welcome h1 {
-            margin-bottom: 5px;
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #1f2a44;
         }
+
+        .welcome p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* ================= STATISTICS ================= */
 
         .cards {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 20px;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(31, 42, 68, 0.08);
+            border: 1px solid #f0eee8;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(31, 42, 68, 0.12);
         }
 
         .card h3 {
-            margin-top: 0;
-            font-size: 16px;
-            color: #666;
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            color: #777;
         }
 
         .number {
             font-size: 28px;
             font-weight: bold;
             margin-top: 15px;
+            color: #1f2a44;
         }
 
         .revenue {
             font-size: 22px;
         }
 
+        /* ================= MENU ================= */
+
         .menu {
-            display: flex;
-            gap: 20px;
             margin-bottom: 30px;
         }
 
         .menu a {
-            display: block;
-            background: #333;
+            display: inline-block;
+            background: #1f2a44;
             color: white;
             text-decoration: none;
-            padding: 14px 22px;
-            border-radius: 6px;
+            padding: 13px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: 0.2s;
         }
 
         .menu a:hover {
-            background: #555;
+            background: #2f3d5d;
+            transform: translateY(-1px);
         }
 
+        /* ================= CHART ================= */
+
         .chart-box {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            padding: 28px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(31, 42, 68, 0.08);
+            border: 1px solid #f0eee8;
         }
 
         .chart-box h2 {
-            margin-top: 0;
-            margin-bottom: 25px;
+            margin: 0 0 25px;
+            font-size: 21px;
+            color: #1f2a44;
         }
 
-        @media (max-width: 1000px) {
+        #orderChart {
+            max-height: 400px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
+
+            .header {
+                height: auto;
+                padding: 18px 20px;
+            }
+
+            .header-right {
+                gap: 10px;
+            }
+
+            .admin-label {
+                display: none;
+            }
+
+            .container {
+                padding: 25px 20px 40px;
+            }
+
             .cards {
                 grid-template-columns: 1fr;
             }
 
-            .container {
-                padding: 20px;
+            .welcome h1 {
+                font-size: 24px;
             }
 
-            .header {
-                padding: 20px;
-            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
+    <!-- ================= HEADER ================= -->
+
     <div class="header">
 
-        <h2>ADMIN DASHBOARD</h2>
+        <a href="/admin" class="logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Tiệm Sách Nhỏ">
+        </a>
 
-        <form action="/admin/logout" method="POST">
-            @csrf
+        <div class="header-right">
 
-            <button class="logout" type="submit">
-                Đăng xuất
-            </button>
-        </form>
+            <div class="admin-label">
+                👤 Quản trị viên
+            </div>
+
+            <form action="/admin/logout" method="POST">
+                @csrf
+
+                <button class="logout" type="submit">
+                    Đăng xuất
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
 
-    <!-- NỘI DUNG -->
+    <!-- ================= CONTENT ================= -->
+
     <div class="container">
 
         <div class="welcome">
@@ -170,12 +263,15 @@
         </div>
 
 
-        <!-- CÁC Ô THỐNG KÊ -->
+        <!-- ================= STATISTICS ================= -->
+
         <div class="cards">
 
             <div class="card">
 
-                <h3>📦 Tổng đơn hàng</h3>
+                <h3>
+                    📦 Tổng đơn hàng
+                </h3>
 
                 <div class="number">
                     {{ $totalOrders }}
@@ -186,7 +282,9 @@
 
             <div class="card">
 
-                <h3>💰 Doanh thu</h3>
+                <h3>
+                    💰 Doanh thu
+                </h3>
 
                 <div class="number revenue">
                     {{ number_format($totalRevenue, 0, ',', '.') }} ₫
@@ -197,7 +295,9 @@
 
             <div class="card">
 
-                <h3>⏳ Chờ xử lý</h3>
+                <h3>
+                    ⏳ Chờ xử lý
+                </h3>
 
                 <div class="number">
                     {{ $pendingOrders }}
@@ -208,7 +308,9 @@
 
             <div class="card">
 
-                <h3>✅ Hoàn thành</h3>
+                <h3>
+                    ✅ Hoàn thành
+                </h3>
 
                 <div class="number">
                     {{ $completedOrders }}
@@ -219,7 +321,9 @@
 
             <div class="card">
 
-                <h3>❌ Đã hủy</h3>
+                <h3>
+                    ❌ Đã hủy
+                </h3>
 
                 <div class="number">
                     {{ $cancelledOrders }}
@@ -230,7 +334,8 @@
         </div>
 
 
-        <!-- MENU -->
+        <!-- ================= MENU ================= -->
+
         <div class="menu">
 
             <a href="/admin/orders">
@@ -240,86 +345,87 @@
         </div>
 
 
-        <!-- BIỂU ĐỒ -->
+        <!-- ================= CHART ================= -->
+
         <div class="chart-box">
 
             <h2>
                 📊 Thống kê đơn hàng
             </h2>
 
-<canvas
-    id="orderChart"
-    data-pending="{{ $pendingOrders }}"
-    data-completed="{{ $completedOrders }}"
-    data-cancelled="{{ $cancelledOrders }}"
-></canvas>
+            <canvas
+                id="orderChart"
+                data-pending="{{ $pendingOrders }}"
+                data-completed="{{ $completedOrders }}"
+                data-cancelled="{{ $cancelledOrders }}"
+            ></canvas>
+
         </div>
 
     </div>
 
 
-    <!-- CHART.JS -->
+    <!-- ================= CHART.JS ================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-    <!-- BIỂU ĐỒ ĐƠN HÀNG -->
     <script>
 
-    const orderChart = document.getElementById('orderChart');
+        const orderChart = document.getElementById('orderChart');
 
-    const pending = Number(orderChart.dataset.pending);
-    const completed = Number(orderChart.dataset.completed);
-    const cancelled = Number(orderChart.dataset.cancelled);
+        const pending = Number(orderChart.dataset.pending);
+        const completed = Number(orderChart.dataset.completed);
+        const cancelled = Number(orderChart.dataset.cancelled);
 
-    new Chart(orderChart, {
+        new Chart(orderChart, {
 
-        type: 'bar',
+            type: 'bar',
 
-        data: {
+            data: {
 
-            labels: [
-                'Chờ xử lý',
-                'Hoàn thành',
-                'Đã hủy'
-            ],
+                labels: [
+                    'Chờ xử lý',
+                    'Hoàn thành',
+                    'Đã hủy'
+                ],
 
-            datasets: [{
+                datasets: [{
 
-                label: 'Số lượng đơn hàng',
+                    label: 'Số lượng đơn hàng',
 
-                data: [
-                    pending,
-                    completed,
-                    cancelled
-                ]
+                    data: [
+                        pending,
+                        completed,
+                        cancelled
+                    ]
 
-            }]
+                }]
 
-        },
+            },
 
-        options: {
+            options: {
 
-            responsive: true,
+                responsive: true,
 
-            scales: {
+                scales: {
 
-                y: {
+                    y: {
 
-                    beginAtZero: true,
+                        beginAtZero: true,
 
-                    ticks: {
-                        precision: 0
+                        ticks: {
+                            precision: 0
+                        }
+
                     }
 
                 }
 
             }
 
-        }
+        });
 
-    });
-
-</script>
+    </script>
 
 </body>
 
