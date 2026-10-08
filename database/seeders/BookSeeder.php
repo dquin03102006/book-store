@@ -22,12 +22,12 @@ class BookSeeder extends Seeder
         $books = [
             [
                 'category_id' => $vanHoc,
-                'title' => 'Nhà Giả Kim',
+                'title' => 'Cậu bé mặc váy',
                 'author' => 'Paulo Coelho',
                 'price' => 79000,
                 'quantity' => 20,
                 'description' => 'Một câu chuyện truyền cảm hứng về hành trình theo đuổi ước mơ.',
-                'image' => null,
+                'image' => 'caubemacvay.webp',
             ],
             [
                 'category_id' => $vanHoc,
