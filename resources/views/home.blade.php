@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Store</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap');
         * {
             box-sizing: border-box;
         }
@@ -133,19 +134,298 @@
             transform: scale(1.1);
         }
 
-        /* BANNER */
-        .banner {
-            margin: 35px 60px;
-            height: 300px;
-            border-radius: 18px;
+        /* =================================
+           HERO BANNER - TRANG CHỦ
+        ================================= */
+
+        .book-hero {
+            position: relative;
+            width: calc(100% - 120px);
+            height: 360px;
+            margin: 0 60px 35px;
             overflow: hidden;
+            border-radius: 0 0 18px 18px;
+            background: linear-gradient(110deg, #eef7ff 0%, #dcecf9 52%, #c7def3 100%);
+            box-shadow: 0 8px 25px rgba(60, 90, 120, .10);
         }
 
-        .banner img {
+        .hero-light {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-light-1 {
+            width: 430px;
+            height: 430px;
+            right: 80px;
+            top: -250px;
+            background: rgba(255, 255, 255, .55);
+        }
+
+        .hero-light-2 {
+            width: 330px;
+            height: 330px;
+            right: -80px;
+            bottom: -220px;
+            background: rgba(255, 255, 255, .40);
+        }
+
+        .hero-spark {
+            position: absolute;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(70, 110, 150, .25);
+            z-index: 2;
+        }
+
+        .spark-1 {
+            top: 35px;
+            left: 48%;
+            font-size: 20px;
+        }
+
+        .spark-2 {
+            top: 80px;
+            right: 31%;
+            font-size: 27px;
+        }
+
+        .spark-3 {
+            top: 28px;
+            right: 12%;
+            font-size: 17px;
+        }
+
+        .spark-4 {
+            bottom: 50px;
+            right: 43%;
+            font-size: 22px;
+        }
+
+        .hero-content {
+            position: absolute;
+            left: 65px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            z-index: 6;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero-label {
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #6689aa;
+        }
+
+        .hero-content h1 {
+            margin: 0;
+            font-size: 43px;
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #17233f;
+        }
+
+        .hero-content h1 strong {
+            color: #17233f;
+        }
+
+        .hero-content p {
+            margin: 16px 0 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #53677e;
+        }
+
+        .hero-button {
+            display: inline-block;
+            padding: 11px 25px;
+            border-radius: 25px;
+            background: #212842;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            transition: .25s;
+        }
+
+        .hero-button:hover {
+            background: #668eb5;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(40, 70, 100, .18);
+        }
+
+        /* CỤM 4 ẢNH BÊN PHẢI */
+        .hero-books {
+            position: absolute;
+            right: 20px;
+            bottom: 0;
+            width: 620px;
+            height: 330px;
+            z-index: 4;
+        }
+
+        .books-glow {
+            position: absolute;
+            width: 430px;
+            height: 230px;
+            right: 65px;
+            top: 15px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse,
+                    rgba(255, 255, 255, .95) 0%,
+                    rgba(255, 255, 255, .55) 42%,
+                    rgba(255, 255, 255, 0) 72%);
+        }
+
+        .books-platform {
+            position: absolute;
+            width: 500px;
+            height: 72px;
+            right: 15px;
+            bottom: 18px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #fff 0%, #edf6fc 70%, #d2e7f6 100%);
+            box-shadow: 0 14px 25px rgba(70, 100, 130, .16);
+            transform: perspective(400px) rotateX(52deg);
+        }
+
+        .books-platform::after {
+            content: "";
+            position: absolute;
+            left: 15px;
+            right: 15px;
+            bottom: 4px;
+            height: 7px;
+            border-radius: 50%;
+            background: #bdd8ed;
+        }
+
+        .hero-book {
+            position: absolute;
+            bottom: 58px;
+            width: 145px;
+            height: 210px;
+            overflow: hidden;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 15px 28px rgba(30, 60, 90, .22);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .hero-book img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+        }
+
+        .hero-book-1 {
+            right: 390px;
+            transform: rotate(-13deg) translateY(10px);
+            z-index: 2;
+        }
+
+        .hero-book-2 {
+            right: 275px;
+            width: 155px;
+            height: 225px;
+            transform: rotate(-3deg);
+            z-index: 5;
+        }
+
+        .hero-book-3 {
+            right: 150px;
+            transform: rotate(8deg) translateY(4px);
+            z-index: 4;
+        }
+
+        .hero-book-4 {
+            right: 35px;
+            width: 135px;
+            height: 200px;
+            transform: rotate(15deg) translateY(15px);
+            z-index: 3;
+        }
+
+        .hero-book:hover {
+            z-index: 10;
+            transform: translateY(-10px) rotate(0deg);
+            box-shadow: 0 20px 35px rgba(35, 65, 95, .28);
+        }
+
+        .floating-page {
+            position: absolute;
+            width: 55px;
+            height: 38px;
+            background: rgba(255, 255, 255, .75);
+            border-radius: 4px;
+            box-shadow: 0 8px 18px rgba(60, 90, 120, .12);
+            z-index: 1;
+        }
+
+        .page-1 {
+            right: 450px;
+            top: 75px;
+            transform: rotate(-18deg);
+        }
+
+        .page-2 {
+            right: 15px;
+            top: 55px;
+            transform: rotate(17deg);
+        }
+
+        /* =================================
+           RESPONSIVE HERO
+        ================================= */
+
+        @media (max-width: 1000px) {
+            .book-hero {
+                width: calc(100% - 60px);
+                margin-left: 30px;
+                margin-right: 30px;
+            }
+
+            .hero-content {
+                left: 40px;
+                width: 48%;
+            }
+
+            .hero-content h1 {
+                font-size: 34px;
+            }
+
+            .hero-books {
+                right: -170px;
+                opacity: .55;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .book-hero {
+                width: calc(100% - 40px);
+                height: 330px;
+                margin: 20px;
+            }
+
+            .hero-content {
+                left: 25px;
+                width: 75%;
+            }
+
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .hero-books {
+                display: none;
+            }
         }
 
         /* FILTER */
@@ -429,6 +709,128 @@
             border-radius: 10px;
             margin-bottom: 18px;
         }
+
+        /* ===== 4 ẢNH BANNER RIÊNG ===== */
+        .hero-books {
+            position: absolute;
+            right: 35px;
+            bottom: 0;
+            width: 680px;
+            height: 320px;
+        }
+
+        .hero-book {
+            position: absolute;
+            bottom: 58px;
+            width: 145px;
+            height: 210px;
+            overflow: hidden;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 15px 28px rgba(30, 60, 90, .22);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .hero-book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-book-1 {
+            right: 600px;
+            transform: rotate(-10deg);
+            z-index: 2;
+        }
+
+        .hero-book-2 {
+            right: 500px;
+            transform: rotate(-6deg);
+            z-index: 5;
+        }
+
+        .hero-book-3 {
+            right: 400px;
+            transform: rotate(-2deg);
+            z-index: 4;
+        }
+
+        .hero-book-4 {
+            right: 300px;
+            transform: rotate(2deg);
+            z-index: 5;
+        }
+
+        .hero-book-5 {
+            right: 200px;
+            transform: rotate(5deg);
+            z-index: 3;
+        }
+
+        .hero-book-6 {
+            right: 100px;
+            transform: rotate(7deg);
+            z-index: 3;
+        }
+
+        .hero-book-7 {
+            right: 0;
+            transform: rotate(9deg);
+            z-index: 3;
+        }
+
+        .hero-book:hover {
+            z-index: 10;
+            transform: translateY(-10px) rotate(0deg);
+            box-shadow: 0 20px 35px rgba(35, 65, 95, .28);
+        }
+
+        .books-glow {
+            position: absolute;
+            width: 430px;
+            height: 230px;
+            right: 110px;
+            top: 15px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .55) 42%, rgba(255, 255, 255, 0) 72%);
+        }
+
+        .books-platform {
+            position: absolute;
+            width: 500px;
+            height: 72px;
+            right: 55px;
+            bottom: 18px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #fff 0%, #edf6fc 70%, #d2e7f6 100%);
+            box-shadow: 0 14px 25px rgba(70, 100, 130, .16);
+            transform: perspective(400px) rotateX(52deg);
+        }
+
+        .books-platform::after {
+            content: "";
+            position: absolute;
+            left: 15px;
+            right: 15px;
+            bottom: 4px;
+            height: 7px;
+            border-radius: 50%;
+            background: #bdd8ed;
+        }
+
+        @media (max-width: 900px) {
+            .hero-books {
+                right: -100px;
+                opacity: .55;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-books {
+                display: none;
+            }
+        }
     </style>
 
 
@@ -493,10 +895,64 @@
     </p>
     @endif
 
-    <!-- BANNER -->
-    <div class="banner">
-        <img src="{{ asset('images/banner.jpg') }}" alt="Book Store Banner">
-    </div>
+    <!-- ========================= BOOKSTORE HERO BANNER ========================= -->
+    <section class="book-hero">
+        <!-- Background decoration -->
+        <div class="hero-light hero-light-1"></div>
+        <div class="hero-light hero-light-2"></div>
+        <span class="hero-spark spark-1">✦</span>
+        <span class="hero-spark spark-2">✧</span>
+        <span class="hero-spark spark-3">✦</span>
+        <span class="hero-spark spark-4">·</span>
+        <!-- LEFT CONTENT -->
+        <div class="hero-content">
+            <div class="hero-label"> TIỆM SÁCH NHỎ </div>
+            <h1> MỞ RA MỘT<br>
+                <strong>THẾ GIỚI</strong>
+                <br> QUA TỪNG TRANG SÁCH
+            </h1>
+            <p> Những câu chuyện hay đang chờ bạn khám phá. </p>
+            <a href="#products" class="hero-button"> KHÁM PHÁ SÁCH <span>→</span> </a>
+        </div>
+        <!-- RIGHT BOOK DISPLAY -->
+        <div class="hero-books">
+            <!-- glow phía sau sách -->
+            <div class="books-glow"></div>
+            <!-- bục tròn -->
+            <div class="books-platform"></div>
+            <!-- sách -->
+            @php
+            $bannerFiles = [
+            'images/banner/banner-1.jpg',
+            'images/banner/banner-2.jpg',
+            'images/banner/banner-3.jpg',
+            'images/banner/banner-4.jpg',
+            'images/banner/banner-5.jpg',
+            'images/banner/banner-6.jpg',
+            'images/banner/banner-7.jpg',
+            ];
+            $bannerFallbacks = $books->take(4)->values();
+            @endphp
+
+            @for ($i = 0; $i < 7; $i++)
+                @php
+                $bannerFile=$bannerFiles[$i];
+                $fallbackImage=$bannerFallbacks->get($i)->image ?? null;
+                $imagePath = file_exists(public_path($bannerFile))
+                ? asset($bannerFile)
+                : ($fallbackImage ? asset('images/books/' . $fallbackImage) : '');
+                @endphp
+
+                <div class="hero-book hero-book-{{ $i + 1 }}">
+                    @if ($imagePath)
+                    <img src="{{ $imagePath }}" alt="Banner {{ $i + 1 }}">
+                    @endif
+                </div>
+                @endfor <!-- decorative floating pages -->
+                <div class="floating-page page-1"></div>
+                <div class="floating-page page-2"></div>
+        </div>
+    </section>
 
     <!-- FILTER -->
     <section class="filter-box">
@@ -564,7 +1020,7 @@
     </section>
 
     <!-- PRODUCTS -->
-    <section class="products">
+    <section class="products" id="products">
 
         <div class="section-title">
             <h2>Sách nổi bật</h2>
@@ -575,7 +1031,6 @@
             @foreach ($books as $book)
 
             <div class="product">
-
                 <img
                     src="{{ asset('images/books/' . $book->image) }}"
                     alt="{{ $book->title }}"
