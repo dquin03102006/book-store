@@ -2,120 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CheckoutRequest;
-use App\Models\Book;
-use App\Models\Order;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
-    public function show()
+    // Hiển thị trang thanh toán
+    public function index()
     {
-        // GIẢ ĐỊNH: bảng cart_items có cột user_id, book_id, quantity (của Lài).
-        $cart = DB::table('cart_items')->where('user_id', auth()->id())->get();
-
-        if ($cart->isEmpty()) {
-            return redirect('/cart')->with('error', 'Giỏ hàng đang trống.');
+        $user = Auth::user();
+        // Lấy giỏ hàng của user (giả sử lưu trong bảng cart_items hoặc session)
+        $cartItems = DB::table('cart_items')
+            ->join('books', 'cart_items.book_id', '=', 'books.id')
+            ->where('cart_items.user_id', $user->id)
+            ->select('cart_items.*', 'books.title', 'books.price')
+            ->get();
+/*
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống!');
         }
+*/
+        $total = $cartItems->sum(fn($item) => $item->price * $item->quantity);
 
-        $books = Book::whereIn('id', $cart->pluck('book_id'))->get()->keyBy('id');
+        return view('checkout.index', compact('cartItems', 'total', 'user'));
+    }
 
-        $subtotal = $cart->sum(fn ($row) => $books[$row->book_id]->price * $row->quantity);
-
-        return view('checkout.show', [
-            'cart'     => $cart,
-            'books'    => $books,
-            'subtotal' => $subtotal,
-            'user'     => auth()->user(),
+    // Xử lý lưu đơn hàng vào Database
+    public function process(Request $request)
+    {
+        $request->validate([
+            'shipping_name' => 'required|string|max:255',
+            'shipping_phone' => 'required|string|max:20',
+            'shipping_address' => 'required|string',
+            'payment_method' => 'required|in:cod,vnpay,momo',
         ]);
-    }
 
-    public function store(CheckoutRequest $request)
-    {
-        $cart = DB::table('cart_items')->where('user_id', auth()->id())->get();
+        $user = Auth::user();
+        
+        $cartItems = DB::table('cart_items')
+            ->join('books', 'cart_items.book_id', '=', 'books.id')
+            ->where('cart_items.user_id', $user->id)
+            ->select('cart_items.*', 'books.price')
+            ->get();
 
-        if ($cart->isEmpty()) {
-            return redirect('/cart')->with('error', 'Giỏ hàng đang trống.');
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index');
         }
 
-        try {
-            $order = DB::transaction(function () use ($request, $cart) {
-                $subtotal = 0;
-                $lines    = [];
+        $totalAmount = $cartItems->sum(fn($item) => $item->price * $item->quantity);
 
-                foreach ($cart as $row) {
-                    // Khóa dòng để 2 người mua cùng lúc không làm âm tồn kho
-                    $book = Book::lockForUpdate()->findOrFail($row->book_id);
+        // Sử dụng Database Transaction để đảm bảo tính toàn vẹn dữ liệu
+        $orderId = DB::transaction(function () use ($request, $user, $cartItems, $totalAmount) {
+            // 1. Tạo đơn hàng trong bảng orders
+            $orderId = DB::table('orders')->insertGetId([
+                'user_id' => $user->id,
+                'shipping_name' => $request->shipping_name,
+                'shipping_phone' => $request->shipping_phone,
+                'shipping_address' => $request->shipping_address,
+                'total_amount' => $totalAmount,
+                'payment_method' => $request->payment_method,
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-                    if ($book->quantity < $row->quantity) {
-                        throw new \Exception('Sách "' . $book->title . '" không đủ số lượng trong kho.');
-                    }
-
-                    $book->decrement('quantity', $row->quantity);
-                    $subtotal += $book->price * $row->quantity;
-
-                    $lines[] = [
-                        'book_id'  => $book->id,
-                        'quantity' => $row->quantity,
-                        'price'    => $book->price, // giá tại thời điểm mua, lấy từ DB
-                    ];
-                }
-
-                $discount = 0;
-
-                if ($request->filled('coupon_code')) {
-                    $coupon = DB::table('coupons')
-                        ->where('code', $request->coupon_code)
-                        ->lockForUpdate()
-                        ->first();
-
-                    $now = now();
-
-                    if (! $coupon
-                        || ! $coupon->is_active
-                        || $coupon->quantity <= 0
-                        || $now->lt($coupon->start_at)
-                        || $now->gt($coupon->end_at)
-                        || $subtotal < $coupon->min_order_amount) {
-                        throw new \Exception('Mã giảm giá không hợp lệ hoặc không đủ điều kiện.');
-                    }
-
-                    $discount = $coupon->discount_type === 'percent'
-                        ? round($subtotal * $coupon->discount_value / 100, 2)
-                        : $coupon->discount_value;
-
-                    $discount = min($discount, $subtotal);
-
-                    DB::table('coupons')->where('id', $coupon->id)->decrement('quantity');
-                }
-
-                $order = Order::create([
-                    'user_id'          => auth()->id(),
-                    'total_amount'     => $subtotal - $discount,
-                    'status'           => 'pending',
-                    'shipping_name'    => $request->shipping_name,
-                    'shipping_phone'   => $request->shipping_phone,
-                    'shipping_address' => $request->shipping_address,
-                    'payment_method'   => $request->payment_method,
+            // 2. Lưu chi tiết đơn hàng vào bảng order_items
+            foreach ($cartItems as $item) {
+                DB::table('order_items')->insert([
+                    'order_id' => $orderId,
+                    'book_id' => $item->book_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
+            }
 
-                $order->items()->createMany($lines);
+            // 3. Xóa giỏ hàng sau khi đặt hàng thành công
+            DB::table('cart_items')->where('user_id', $user->id)->delete();
 
-                DB::table('cart_items')->where('user_id', auth()->id())->delete();
+            return $orderId;
+        });
 
-                return $order;
-            });
-        } catch (\Exception $e) {
-            return back()->withInput()->with('error', $e->getMessage());
-        }
-
-        return redirect()->route('checkout.success', $order)->with('success', 'Đặt hàng thành công.');
+        // Nếu chọn thanh toán online (VNPAY/Momo), điều hướng sang cổng thanh toán giả lập/sandbox ở đây.
+        // Tạm thời với đồ án, ta chuyển hướng thẳng đến trang thành công (COD).
+        return redirect()->route('checkout.success', ['order' => $orderId])
+            ->with('success', 'Đặt hàng thành công!');
     }
 
-    public function success(Order $order)
+    // Trang thông báo đặt hàng thành công
+    public function success($orderId)
     {
-        abort_if($order->user_id !== auth()->id(), 403);
+        $order = DB::table('orders')->where('id', $orderId)->where('user_id', Auth::id())->first();
+        
+        if (!$order) {
+            abort(404);
+        }
 
-        return view('checkout.success', compact('order'));
+        $orderItems = DB::table('order_items')
+            ->join('books', 'order_items.book_id', '=', 'books.id')
+            ->where('order_items.order_id', $orderId)
+            ->select('order_items.*', 'books.title')
+            ->get();
+
+        return view('checkout.success', compact('order', 'orderItems'));
     }
 }

@@ -2,44 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function edit()
+    /**
+     * Display the user's profile form.
+     */
+    public function edit(Request $request): View
     {
-        return view('profile.edit', ['user' => auth()->user()]);
+        return view('profile.edit', [
+            'user' => $request->user(),
+        ]);
     }
 
-    public function update(Request $request)
+    /**
+     * Update the user's profile information.
+     */
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name'    => 'required|string|max:100',
-            'phone'   => ['nullable', 'regex:/^(0|\+84)[0-9]{9}$/'],
-            'address' => 'nullable|string|max:255',
-        ], [
-            'name.required' => 'Vui lòng nhập họ tên.',
-            'phone.regex'   => 'Số điện thoại không hợp lệ.',
-        ]);
+        $request->user()->fill($request->validated());
 
-        $request->user()->update($data);
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
 
-        return back()->with('success', 'Cập nhật thông tin thành công.');
+        $request->user()->save();
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    public function updatePassword(Request $request)
+    /**
+     * Delete the user's account.
+     */
+    public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
-            'current_password' => 'required|current_password',
-            'password'         => 'required|string|min:6|confirmed',
-        ], [
-            'current_password.current_password' => 'Mật khẩu hiện tại không đúng.',
-            'password.min'                      => 'Mật khẩu mới tối thiểu 6 ký tự.',
-            'password.confirmed'                => 'Xác nhận mật khẩu không khớp.',
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
         ]);
 
-        $request->user()->update(['password' => $request->password]);
+        $user = $request->user();
 
-        return back()->with('success', 'Đổi mật khẩu thành công.');
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
 }
