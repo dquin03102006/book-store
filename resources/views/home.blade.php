@@ -8,6 +8,7 @@
     <title>Book Store</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+
         * {
             box-sizing: border-box;
         }
@@ -849,6 +850,12 @@
             <a href="/">Trang chủ</a>
             <a href="/gioi-thieu">Giới thiệu</a>
             <a href="#">Sản phẩm</a>
+
+            @auth
+            @if(auth()->user()->role === 'admin')
+            <a href="/admin">Quản trị</a>
+            @endif
+            @endauth
         </nav>
 
         <form class="search-form" action="/" method="GET">
