@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class SupportMessage extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'name',
+        'email',
+        'subject',
+        'message',
+        'status',
+    ];
 }

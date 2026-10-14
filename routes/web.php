@@ -3,15 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SupportController;
 
-Route::get('/', function () {
-    $categories = \App\Models\Category::all();
-    $books = \App\Models\Book::all();
+// ====================
+// TRANG CHỦ
+// ====================
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
 
-    return view('home', compact('categories', 'books'));
-});
-
-// Danh sách sách
+// ====================
+// DANH SÁCH SÁCH
+// ====================
 Route::get('/books', [BookController::class, 'index'])
     ->name('books.index');
 
@@ -34,3 +37,27 @@ Route::put('/cart/update/{id}', [CartController::class, 'update'])
 // Xóa sản phẩm khỏi giỏ
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])
     ->name('cart.remove');
+
+// ====================
+// KHUYẾN MÃI
+// ====================
+
+// Áp dụng mã khuyến mãi
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])
+    ->name('cart.applyCoupon');
+
+// Gỡ mã khuyến mãi
+Route::post('/cart/remove-coupon', [CartController::class, 'removeCoupon'])
+    ->name('cart.removeCoupon');
+
+// ====================
+// HỖ TRỢ KHÁCH HÀNG
+// ====================
+
+// Hiển thị trang hỗ trợ
+Route::get('/support', [SupportController::class, 'index'])
+    ->name('support.index');
+
+// Gửi yêu cầu hỗ trợ
+Route::post('/support', [SupportController::class, 'store'])
+    ->name('support.store');
