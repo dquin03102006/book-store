@@ -1,66 +1,102 @@
-<?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Hiển thị trang giao diện thanh toán
-     */
+    // Hiển thị trang thanh toán với dữ liệu giỏ hàng từ Session
     public function index()
     {
-        return view('checkout.index'); 
+        $cart = session()->get('cart', []);
+        
+        // Dữ liệu mẫu nếu giỏ hàng trống (để test giao diện)
+        if (empty($cart)) {
+            $cart = [
+                1 => [
+                    'name' => 'Sách Laravel Cơ Bản',
+                    'price' => 150000,
+                    'quantity' => 1
+                ]
+            ];
+        }
+
+        $total = collect($cart)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        return view('checkout', compact('cart', 'total'));
     }
 
-    /**
-     * Xử lý khi người dùng bấm xác nhận đặt hàng
-     */
+    // Xử lý lưu đơn hàng
     public function process(Request $request)
     {
-        // Ở giai đoạn test UI/UX: validate dữ liệu cơ bản (nếu cần)
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|string|max:20',
             'address' => 'required|string',
+            'payment_method' => 'required|string',
         ]);
 
-        // Giả lập lưu đơn hàng và sinh ra mã đơn hàng ngẫu nhiên hoặc tự tăng (ví dụ: 101)
-        $orderId = rand(100, 999);
+        $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            // Dữ liệu mẫu cho test
+            $cart = [
+                1 => [
+                    'name' => 'Sách Laravel Cơ Bản',
+                    'price' => 150000,
+                    'quantity' => 1
+                ]
+            ];
+        }
 
-        // Chuyển hướng sang trang thành công kèm theo mã đơn hàng
-        return redirect()->route('checkout.success', ['order' => $orderId]);
+        $total = collect($cart)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        DB::beginTransaction();
+        try {
+            // Tạo đơn hàng mới
+            $order = Order::create([
+                'user_id' => auth()->id() ?? 1, // Tạm gán ID 1 nếu test nhanh
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'payment_method' => $request->payment_method,
+                'total_price' => $total,
+                'status' => 'pending',
+            ]);
+
+            // Lưu chi tiết sản phẩm đơn hàng
+            foreach ($cart as $id => $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $id,
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                ]);
+            }
+
+            DB::commit();
+
+            // Xóa giỏ hàng sau khi đặt thành công
+            session()->forget('cart');
+
+            return redirect()->route('checkout.success', $order->id)
+                             ->with('success', 'Đặt hàng thành công!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại!')->withInput();
+        }
     }
 
-    /**
-     * Hiển thị trang thông báo đặt hàng thành công
-     */
-    public function success($order)
+    // Trang thông báo đặt hàng thành công
+    public function success($id)
     {
-        return view('checkout.success', compact('order'));
-    }
-
-    /**
-     * Hiển thị lịch sử đơn hàng (dùng dữ liệu mẫu phục vụ kiểm thử giao diện)
-     */
-    public function history()
-    {
-        $orders = [
-            [
-                'id' => 101,
-                'created_at' => '2026-10-15 10:30:00',
-                'total_price' => 150000,
-                'status' => 'Đang xử lý'
-            ],
-            [
-                'id' => 102,
-                'created_at' => '2026-10-14 14:20:00',
-                'total_price' => 320000,
-                'status' => 'Đã giao hàng'
-            ]
-        ];
-
-        return view('orders.history', compact('orders'));
+        $order = Order::with('orderItems')->findOrFail($id);
+        return view('order-success', compact('order'));
     }
 }
