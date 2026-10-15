@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,21 +9,16 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    // Hiển thị trang thanh toán với dữ liệu giỏ hàng từ Session
     public function index()
     {
-        $cart = session()->get('cart', []);
-        
-        // Dữ liệu mẫu nếu giỏ hàng trống (để test giao diện)
-        if (empty($cart)) {
-            $cart = [
-                1 => [
-                    'name' => 'Sách Laravel Cơ Bản',
-                    'price' => 150000,
-                    'quantity' => 1
-                ]
-            ];
-        }
+        $cart = session()->get('cart', [
+            [
+                'id' => 1,
+                'name' => 'Sách Laravel Cơ Bản',
+                'price' => 150000,
+                'quantity' => 1
+            ]
+        ]);
 
         $total = collect($cart)->sum(function ($item) {
             return $item['price'] * $item['quantity'];
@@ -30,7 +27,6 @@ class CheckoutController extends Controller
         return view('checkout', compact('cart', 'total'));
     }
 
-    // Xử lý lưu đơn hàng
     public function process(Request $request)
     {
         $request->validate([
@@ -40,63 +36,61 @@ class CheckoutController extends Controller
             'payment_method' => 'required|string',
         ]);
 
-        $cart = session()->get('cart', []);
+        $cart = session()->get('cart', [
+            [
+                'id' => 1,
+                'name' => 'Sách Laravel Cơ Bản',
+                'price' => 150000,
+                'quantity' => 1
+            ]
+        ]);
+
         if (empty($cart)) {
-            // Dữ liệu mẫu cho test
-            $cart = [
-                1 => [
-                    'name' => 'Sách Laravel Cơ Bản',
-                    'price' => 150000,
-                    'quantity' => 1
-                ]
-            ];
+            return redirect()->route('checkout.index')->with('error', 'Giỏ hàng của bạn đang trống!');
         }
 
         $total = collect($cart)->sum(function ($item) {
             return $item['price'] * $item['quantity'];
         });
 
-        DB::beginTransaction();
         try {
-            // Tạo đơn hàng mới
+            DB::beginTransaction();
+
             $order = Order::create([
-                'user_id' => auth()->id() ?? 1, // Tạm gán ID 1 nếu test nhanh
+                'user_id' => auth()->id() ?? null,
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'payment_method' => $request->payment_method,
                 'total_price' => $total,
-                'status' => 'pending',
+                'status' => 'pending'
             ]);
 
-            // Lưu chi tiết sản phẩm đơn hàng
-            foreach ($cart as $id => $item) {
+            foreach ($cart as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $id,
-                    'quantity' => $item['quantity'],
+                    'product_id' => $item['id'] ?? 1,
+                    'product_name' => $item['name'],
                     'price' => $item['price'],
+                    'quantity' => $item['quantity'],
                 ]);
             }
 
             DB::commit();
 
-            // Xóa giỏ hàng sau khi đặt thành công
             session()->forget('cart');
 
-            return redirect()->route('checkout.success', $order->id)
-                             ->with('success', 'Đặt hàng thành công!');
+            return redirect()->route('checkout.success', ['id' => $order->id]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại!')->withInput();
+            return redirect()->back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
 
-    // Trang thông báo đặt hàng thành công
     public function success($id)
     {
-        $order = Order::with('orderItems')->findOrFail($id);
+        $order = Order::with('items')->findOrFail($id);
         return view('order-success', compact('order'));
     }
 }
