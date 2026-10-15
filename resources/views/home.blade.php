@@ -832,6 +832,45 @@
                 display: none;
             }
         }
+
+        /* Menu Danh mục xổ xuống */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 18px;
+            color: #444;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu a:hover {
+            background: #212842;
+            color: #ffff;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
     </style>
 
 
@@ -846,10 +885,21 @@
             </a>
         </div>
 
+
         <nav>
             <a href="/">Trang chủ</a>
             <a href="/gioi-thieu">Giới thiệu</a>
-            <a href="#">Sản phẩm</a>
+
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">Danh mục ▾</a>
+                <div class="dropdown-menu">
+                    @foreach ($categories as $item)
+                    <a href="{{ url('/danh-muc/' . $item->id) }}">
+                        {{ $item->name }}
+                    </a>
+                    @endforeach
+                </div>
+            </div>
 
             @auth
             @if(auth()->user()->role === 'admin')
@@ -857,6 +907,7 @@
             @endif
             @endauth
         </nav>
+
 
         <form class="search-form" action="/" method="GET">
             <input

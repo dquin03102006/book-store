@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Giới thiệu - Tiệm sách nhỏ</title>
-    
+
     <style>
         * {
             box-sizing: border-box;
@@ -860,6 +860,48 @@
                 gap: 25px 15px;
             }
         }
+
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 18px;
+            color: #202942;
+            background: #fff;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu a:hover {
+            background: #212842;
+            color: #ffff;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
     </style>
 </head>
 
@@ -878,7 +920,18 @@
         <nav>
             <a href="/">Trang chủ</a>
             <a href="/gioi-thieu">Giới thiệu</a>
-            <a href="#">Sản phẩm</a>
+
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">Danh mục ▾</a>
+                <div class="dropdown-menu">
+                    @foreach ($categories as $item)
+                    <a href="{{ url('/danh-muc/' . $item->id) }}">
+                        {{ $item->name }}
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+
         </nav>
 
         <form class="search-form" action="/" method="GET">

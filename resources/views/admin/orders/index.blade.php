@@ -402,6 +402,19 @@
                 font-size: 25px;
             }
         }
+
+        .admin-logo {
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .admin-logo img {
+            display: block;
+            width: 120px;
+            height: 55px;
+            object-fit: contain;
+        }
     </style>
 </head>
 
@@ -411,7 +424,7 @@
 
     <header class="header">
 
-        <a href="/admin" class="logo">
+        <a href="{{ url('/') }}" class="admin-logo">
             <img src="{{ asset('images/logo.png') }}" alt="Tiệm Sách Nhỏ">
         </a>
 
@@ -473,8 +486,7 @@
             <form
                 action="{{ route('admin.orders.index') }}"
                 method="GET"
-                class="filter-form"
-            >
+                class="filter-form">
 
                 <select name="status">
 
@@ -484,36 +496,31 @@
 
                     <option
                         value="pending"
-                        {{ request('status') == 'pending' ? 'selected' : '' }}
-                    >
+                        {{ request('status') == 'pending' ? 'selected' : '' }}>
                         Chờ xử lý
                     </option>
 
                     <option
                         value="processing"
-                        {{ request('status') == 'processing' ? 'selected' : '' }}
-                    >
+                        {{ request('status') == 'processing' ? 'selected' : '' }}>
                         Đang xử lý
                     </option>
 
                     <option
                         value="shipped"
-                        {{ request('status') == 'shipped' ? 'selected' : '' }}
-                    >
+                        {{ request('status') == 'shipped' ? 'selected' : '' }}>
                         Đang giao
                     </option>
 
                     <option
                         value="completed"
-                        {{ request('status') == 'completed' ? 'selected' : '' }}
-                    >
+                        {{ request('status') == 'completed' ? 'selected' : '' }}>
                         Hoàn thành
                     </option>
 
                     <option
                         value="cancelled"
-                        {{ request('status') == 'cancelled' ? 'selected' : '' }}
-                    >
+                        {{ request('status') == 'cancelled' ? 'selected' : '' }}>
                         Đã hủy
                     </option>
 
@@ -525,8 +532,7 @@
 
                 <a
                     href="{{ route('admin.orders.index') }}"
-                    class="reset-btn"
-                >
+                    class="reset-btn">
                     Đặt lại
                 </a>
 
@@ -554,168 +560,167 @@
 
             @if($orders->count() > 0)
 
-                <div class="table-wrapper">
+            <div class="table-wrapper">
 
-                    <table>
+                <table>
 
-                        <thead>
+                    <thead>
 
-                            <tr>
-                                <th>Mã đơn</th>
-                                <th>Khách hàng</th>
-                                <th>SĐT</th>
-                                <th>Tổng tiền</th>
-                                <th>Thanh toán</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày đặt</th>
-                                <th>Thao tác</th>
-                            </tr>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>SĐT</th>
+                            <th>Tổng tiền</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày đặt</th>
+                            <th>Thao tác</th>
+                        </tr>
 
-                        </thead>
+                    </thead>
 
-                        <tbody>
+                    <tbody>
 
-                            @foreach($orders as $order)
+                        @foreach($orders as $order)
 
-                                <tr>
+                        <tr>
 
-                                    {{-- MÃ ĐƠN --}}
+                            {{-- MÃ ĐƠN --}}
 
-                                    <td>
-                                        <span class="order-id">
-                                            #{{ $order->id }}
-                                        </span>
-                                    </td>
-
-
-                                    {{-- KHÁCH HÀNG --}}
-
-                                    <td>
-                                        <span class="customer-name">
-                                            {{ $order->shipping_name }}
-                                        </span>
-                                    </td>
+                            <td>
+                                <span class="order-id">
+                                    #{{ $order->id }}
+                                </span>
+                            </td>
 
 
-                                    {{-- SĐT --}}
+                            {{-- KHÁCH HÀNG --}}
 
-                                    <td>
-                                        <span class="phone">
-                                            {{ $order->shipping_phone }}
-                                        </span>
-                                    </td>
-
-
-                                    {{-- TỔNG TIỀN --}}
-
-                                    <td>
-                                        <span class="price">
-                                            {{ number_format($order->total_amount, 0, ',', '.') }} đ
-                                        </span>
-                                    </td>
+                            <td>
+                                <span class="customer-name">
+                                    {{ $order->shipping_name }}
+                                </span>
+                            </td>
 
 
-                                    {{-- THANH TOÁN --}}
+                            {{-- SĐT --}}
 
-                                    <td>
-                                        <strong>
-                                            {{ strtoupper($order->payment_method ?? '') }}
-                                        </strong>
-                                    </td>
-
-
-                                    {{-- TRẠNG THÁI --}}
-
-                                    <td>
-
-                                        @if($order->status === 'pending')
-
-                                            <span class="status status-pending">
-                                                Chờ xử lý
-                                            </span>
-
-                                        @elseif($order->status === 'processing')
-
-                                            <span class="status status-processing">
-                                                Đang xử lý
-                                            </span>
-
-                                        @elseif($order->status === 'shipped')
-
-                                            <span class="status status-shipped">
-                                                Đang giao
-                                            </span>
-
-                                        @elseif($order->status === 'completed')
-
-                                            <span class="status status-completed">
-                                                Hoàn thành
-                                            </span>
-
-                                        @elseif($order->status === 'cancelled')
-
-                                            <span class="status status-cancelled">
-                                                Đã hủy
-                                            </span>
-
-                                        @endif
-
-                                    </td>
+                            <td>
+                                <span class="phone">
+                                    {{ $order->shipping_phone }}
+                                </span>
+                            </td>
 
 
-                                    {{-- NGÀY ĐẶT --}}
+                            {{-- TỔNG TIỀN --}}
 
-                                    <td>
-                                        {{ $order->created_at->format('d/m/Y H:i') }}
-                                    </td>
-
-
-                                    {{-- THAO TÁC --}}
-
-                                    <td>
-
-                                        <a
-                                            href="{{ route('admin.orders.show', $order->id) }}"
-                                            class="detail-btn"
-                                        >
-                                            Xem chi tiết
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                </div>
+                            <td>
+                                <span class="price">
+                                    {{ number_format($order->total_amount, 0, ',', '.') }} đ
+                                </span>
+                            </td>
 
 
-                {{-- PAGINATION --}}
+                            {{-- THANH TOÁN --}}
 
-                <div class="pagination-box">
+                            <td>
+                                <strong>
+                                    {{ strtoupper($order->payment_method ?? '') }}
+                                </strong>
+                            </td>
 
-                    {{ $orders->links() }}
 
-                </div>
+                            {{-- TRẠNG THÁI --}}
+
+                            <td>
+
+                                @if($order->status === 'pending')
+
+                                <span class="status status-pending">
+                                    Chờ xử lý
+                                </span>
+
+                                @elseif($order->status === 'processing')
+
+                                <span class="status status-processing">
+                                    Đang xử lý
+                                </span>
+
+                                @elseif($order->status === 'shipped')
+
+                                <span class="status status-shipped">
+                                    Đang giao
+                                </span>
+
+                                @elseif($order->status === 'completed')
+
+                                <span class="status status-completed">
+                                    Hoàn thành
+                                </span>
+
+                                @elseif($order->status === 'cancelled')
+
+                                <span class="status status-cancelled">
+                                    Đã hủy
+                                </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- NGÀY ĐẶT --}}
+
+                            <td>
+                                {{ $order->created_at->format('d/m/Y H:i') }}
+                            </td>
+
+
+                            {{-- THAO TÁC --}}
+
+                            <td>
+
+                                <a
+                                    href="{{ route('admin.orders.show', $order->id) }}"
+                                    class="detail-btn">
+                                    Xem chi tiết
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {{-- PAGINATION --}}
+
+            <div class="pagination-box">
+
+                {{ $orders->links() }}
+
+            </div>
 
 
             @else
 
-                <div class="empty">
+            <div class="empty">
 
-                    <div class="empty-icon">
-                        📦
-                    </div>
-
-                    <p>
-                        Chưa có đơn hàng nào.
-                    </p>
-
+                <div class="empty-icon">
+                    📦
                 </div>
+
+                <p>
+                    Chưa có đơn hàng nào.
+                </p>
+
+            </div>
 
             @endif
 

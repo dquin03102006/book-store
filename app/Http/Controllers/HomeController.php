@@ -39,10 +39,29 @@ class HomeController extends Controller
             ->when($sort == 'latest' || !$sort, function ($query) {
                 $query->latest();
             })
+            ->limit(12)
+            ->get();
+
+        $categories = Category::all();
+        return view('home', compact('books', 'keyword', 'category', 'price', 'sort', 'categories'));
+    }
+    public function categories()
+    {
+        $categories = Category::all();
+
+        return view('categories', compact('categories'));
+    }
+    public function category($id)
+    {
+        $category = Category::findOrFail($id);
+
+        $books = Book::where('category_id', $id)
+            ->latest()
+            ->limit(10)
             ->get();
 
         $categories = Category::all();
 
-       return view('home', compact('books', 'keyword', 'category', 'price', 'sort', 'categories'));
+        return view('category', compact('books', 'category', 'categories'));
     }
 }

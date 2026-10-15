@@ -457,7 +457,7 @@
 
     <header class="header">
 
-        <a href="/admin" class="logo">
+        <a href="{{ url('/') }}">
             <img src="{{ asset('images/logo.png') }}" alt="Tiệm Sách Nhỏ">
         </a>
 
@@ -503,8 +503,7 @@
 
             <a
                 href="{{ route('admin.orders.index') }}"
-                class="back-btn"
-            >
+                class="back-btn">
                 ← Danh sách đơn hàng
             </a>
 
@@ -515,9 +514,9 @@
 
         @if(session('success'))
 
-            <div class="success-message">
-                ✓ {{ session('success') }}
-            </div>
+        <div class="success-message">
+            ✓ {{ session('success') }}
+        </div>
 
         @endif
 
@@ -577,9 +576,9 @@
                             <span class="info-value">
 
                                 @if(strtolower($order->payment_method ?? '') === 'cod')
-                                    COD
+                                COD
                                 @else
-                                    {{ strtoupper($order->payment_method ?? '') }}
+                                {{ strtoupper($order->payment_method ?? '') }}
                                 @endif
 
                             </span>
@@ -597,33 +596,33 @@
 
                                 @if($order->status === 'pending')
 
-                                    <span class="status status-pending">
-                                        Chờ xử lý
-                                    </span>
+                                <span class="status status-pending">
+                                    Chờ xử lý
+                                </span>
 
                                 @elseif($order->status === 'processing')
 
-                                    <span class="status status-processing">
-                                        Đang xử lý
-                                    </span>
+                                <span class="status status-processing">
+                                    Đang xử lý
+                                </span>
 
                                 @elseif($order->status === 'shipped')
 
-                                    <span class="status status-shipped">
-                                        Đang giao
-                                    </span>
+                                <span class="status status-shipped">
+                                    Đang giao
+                                </span>
 
                                 @elseif($order->status === 'completed')
 
-                                    <span class="status status-completed">
-                                        Hoàn thành
-                                    </span>
+                                <span class="status status-completed">
+                                    Hoàn thành
+                                </span>
 
                                 @elseif($order->status === 'cancelled')
 
-                                    <span class="status status-cancelled">
-                                        Đã hủy
-                                    </span>
+                                <span class="status status-cancelled">
+                                    Đã hủy
+                                </span>
 
                                 @endif
 
@@ -704,54 +703,53 @@
 
                         @foreach($order->items as $item)
 
-                            <div class="product-row">
+                        <div class="product-row">
 
-                                <div class="product-image">
+                            <div class="product-image">
 
-                                    @if($item->book && $item->book->image)
+                                @if($item->book && $item->book->image)
 
-                                        <img
-                                            src="{{ asset('storage/' . $item->book->image) }}"
-                                            alt="{{ $item->book->title }}"
-                                        >
+                                <img
+                                    src="{{ asset('storage/' . $item->book->image) }}"
+                                    alt="{{ $item->book->title }}">
 
-                                    @else
+                                @else
 
-                                        <div class="no-image">
-                                            📚
-                                        </div>
-
-                                    @endif
-
+                                <div class="no-image">
+                                    📚
                                 </div>
 
+                                @endif
 
-                                <div class="product-info">
+                            </div>
 
-                                    <div class="product-name">
-                                        {{ $item->book->title ?? 'Sản phẩm' }}
-                                    </div>
 
-                                    <div class="product-meta">
-                                        Số lượng: {{ $item->quantity }}
-                                    </div>
+                            <div class="product-info">
 
+                                <div class="product-name">
+                                    {{ $item->book->title ?? 'Sản phẩm' }}
                                 </div>
 
-
-                                <div class="product-price">
-
-                                    <div class="unit-price">
-                                        {{ number_format($item->price, 0, ',', '.') }} đ / cuốn
-                                    </div>
-
-                                    <div class="total-price">
-                                        {{ number_format($item->price * $item->quantity, 0, ',', '.') }} đ
-                                    </div>
-
+                                <div class="product-meta">
+                                    Số lượng: {{ $item->quantity }}
                                 </div>
 
                             </div>
+
+
+                            <div class="product-price">
+
+                                <div class="unit-price">
+                                    {{ number_format($item->price, 0, ',', '.') }} đ / cuốn
+                                </div>
+
+                                <div class="total-price">
+                                    {{ number_format($item->price * $item->quantity, 0, ',', '.') }} đ
+                                </div>
+
+                            </div>
+
+                        </div>
 
                         @endforeach
 
@@ -806,33 +804,33 @@
 
                             @if($order->status === 'pending')
 
-                                <span class="status status-pending">
-                                    Chờ xử lý
-                                </span>
+                            <span class="status status-pending">
+                                Chờ xử lý
+                            </span>
 
                             @elseif($order->status === 'processing')
 
-                                <span class="status status-processing">
-                                    Đang xử lý
-                                </span>
+                            <span class="status status-processing">
+                                Đang xử lý
+                            </span>
 
                             @elseif($order->status === 'shipped')
 
-                                <span class="status status-shipped">
-                                    Đang giao
-                                </span>
+                            <span class="status status-shipped">
+                                Đang giao
+                            </span>
 
                             @elseif($order->status === 'completed')
 
-                                <span class="status status-completed">
-                                    Hoàn thành
-                                </span>
+                            <span class="status status-completed">
+                                Hoàn thành
+                            </span>
 
                             @elseif($order->status === 'cancelled')
 
-                                <span class="status status-cancelled">
-                                    Đã hủy
-                                </span>
+                            <span class="status status-cancelled">
+                                Đã hủy
+                            </span>
 
                             @endif
 
@@ -842,8 +840,7 @@
                         <form
                             action="{{ route('admin.orders.updateStatus', $order->id) }}"
                             method="POST"
-                            class="status-form"
-                        >
+                            class="status-form">
 
                             @csrf
                             @method('PATCH')
@@ -856,36 +853,31 @@
 
                                 <option
                                     value="pending"
-                                    {{ $order->status === 'pending' ? 'selected' : '' }}
-                                >
+                                    {{ $order->status === 'pending' ? 'selected' : '' }}>
                                     Chờ xử lý
                                 </option>
 
                                 <option
                                     value="processing"
-                                    {{ $order->status === 'processing' ? 'selected' : '' }}
-                                >
+                                    {{ $order->status === 'processing' ? 'selected' : '' }}>
                                     Đang xử lý
                                 </option>
 
                                 <option
                                     value="shipped"
-                                    {{ $order->status === 'shipped' ? 'selected' : '' }}
-                                >
+                                    {{ $order->status === 'shipped' ? 'selected' : '' }}>
                                     Đang giao
                                 </option>
 
                                 <option
                                     value="completed"
-                                    {{ $order->status === 'completed' ? 'selected' : '' }}
-                                >
+                                    {{ $order->status === 'completed' ? 'selected' : '' }}>
                                     Hoàn thành
                                 </option>
 
                                 <option
                                     value="cancelled"
-                                    {{ $order->status === 'cancelled' ? 'selected' : '' }}
-                                >
+                                    {{ $order->status === 'cancelled' ? 'selected' : '' }}>
                                     Đã hủy
                                 </option>
 
@@ -893,8 +885,7 @@
 
                             <button
                                 type="submit"
-                                class="update-btn"
-                            >
+                                class="update-btn">
                                 Cập nhật trạng thái
                             </button>
 
@@ -954,9 +945,9 @@
                             <span class="info-value">
 
                                 @if(strtolower($order->payment_method ?? '') === 'cod')
-                                    COD
+                                COD
                                 @else
-                                    {{ strtoupper($order->payment_method ?? '') }}
+                                {{ strtoupper($order->payment_method ?? '') }}
                                 @endif
 
                             </span>
@@ -972,8 +963,7 @@
 
                             <span
                                 class="info-value"
-                                style="font-size: 18px; color: #1f2a44;"
-                            >
+                                style="font-size: 18px; color: #1f2a44;">
                                 {{ number_format($order->total_amount, 0, ',', '.') }} đ
                             </span>
 

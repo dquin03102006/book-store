@@ -1,14 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReviewController;
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/danh-muc/{id}', [HomeController::class, 'category']);
 
 Route::get('/gioi-thieu', function () {
-    return view('gioi-thieu');
+    $categories = DB::table('categories')->get();
+
+    return view('gioi-thieu', compact('categories'));
 });
 
 Route::get('/book/{id}', [BookController::class, 'show']);
