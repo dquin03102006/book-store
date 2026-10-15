@@ -13,6 +13,23 @@
             box-sizing: border-box;
         }
 
+.product {
+    position: relative;
+}
+
+.promotion-label {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e53935;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    z-index: 1;
+}
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -1067,6 +1084,7 @@
             @foreach ($books as $book)
 
             <div class="product">
+                <div class="promotion-label">Khuyến mãi</div>
                 <img
                     src="{{ asset('images/books/' . $book->image) }}"
                     alt="{{ $book->title }}"
@@ -1082,7 +1100,7 @@
                     {{ number_format($book->price, 0, ',', '.') }} VNĐ
                 </p>
 
-                ```blade
+                
 <form action="{{ route('cart.add', $book->id) }}" method="POST" style="margin-top: 10px;">
     @csrf
     <button type="submit" class="detail-btn">
