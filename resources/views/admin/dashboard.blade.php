@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.app')
 
 @section('title', 'Tổng quan')
@@ -21,16 +22,26 @@
 <div class="card">
     <div class="card-header">Sản phẩm sắp hết hàng (≤ 5)</div>
     <table class="table mb-0">
-        <thead><tr><th>Tên sách</th><th>Danh mục</th><th>Tồn kho</th></tr></thead>
+        <thead>
+            <tr>
+                <th>Tên sách</th>
+                <th>Danh mục</th>
+                <th>Tồn kho</th>
+            </tr>
+        </thead>
         <tbody>
             @forelse($lowStock as $book)
                 <tr>
                     <td>{{ $book->title }}</td>
-                    <td>{{ $book->category->name }}</td>
+                    <td>{{ $book->category?->name ?? 'Chưa phân loại' }}</td>
                     <td>{{ $book->quantity }}</td>
                 </tr>
             @empty
-                <tr><td colspan="3" class="text-center text-muted">Không có sản phẩm nào sắp hết hàng.</td></tr>
+                <tr>
+                    <td colspan="3" class="text-center text-muted">
+                        Không có sản phẩm nào sắp hết hàng.
+                    </td>
+                </tr>
             @endforelse
         </tbody>
     </table>

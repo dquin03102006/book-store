@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Models;
@@ -18,5 +19,10 @@ class Book extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 }

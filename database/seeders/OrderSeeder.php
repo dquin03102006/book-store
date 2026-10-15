@@ -22,15 +22,15 @@ class OrderSeeder extends Seeder
             ->value('id');
 
         $book1 = DB::table('books')
-            ->where('title', 'Nhà Giả Kim')
+            ->where('title', 'BÀ BÁC KHỦNG KHIẾP')
             ->value('id');
 
         $book2 = DB::table('books')
-            ->where('title', 'Tuổi Trẻ Đáng Giá Bao Nhiêu')
+            ->where('title', 'MUN ƠI, CHẠY ĐI')
             ->value('id');
 
         $book3 = DB::table('books')
-            ->where('title', 'Đắc Nhân Tâm')
+            ->where('title', 'PHÍA SAU NGHI CAN X')
             ->value('id');
 
         $order1 = DB::table('orders')->updateOrInsert(
@@ -39,7 +39,7 @@ class OrderSeeder extends Seeder
                 'shipping_phone' => '0901234567',
             ],
             [
-                'total_amount' => 164000,
+                'total_amount' => 310000,
                 'status' => 'completed',
                 'shipping_name' => 'Khách hàng 1',
                 'shipping_address' => 'TP. Hồ Chí Minh',
@@ -61,7 +61,7 @@ class OrderSeeder extends Seeder
             ],
             [
                 'quantity' => 1,
-                'price' => 79000,
+                'price' => 185000,
                 'updated_at' => now(),
                 'created_at' => now(),
             ]
@@ -74,7 +74,7 @@ class OrderSeeder extends Seeder
             ],
             [
                 'quantity' => 1,
-                'price' => 85000,
+                'price' => 125000,
                 'updated_at' => now(),
                 'created_at' => now(),
             ]
@@ -86,7 +86,7 @@ class OrderSeeder extends Seeder
                 'shipping_phone' => '0907654321',
             ],
             [
-                'total_amount' => 99000,
+                'total_amount' => 155000,
                 'status' => 'pending',
                 'shipping_name' => 'Khách hàng 2',
                 'shipping_address' => 'TP. Hồ Chí Minh',

@@ -22,17 +22,16 @@ class ReviewSeeder extends Seeder
             ->value('id');
 
         $book1 = DB::table('books')
-            ->where('title', 'Nhà Giả Kim')
+            ->where('title', 'BÀ BÁC KHỦNG KHIẾP')
             ->value('id');
 
         $book2 = DB::table('books')
-            ->where('title', 'Tuổi Trẻ Đáng Giá Bao Nhiêu')
+            ->where('title', 'MUN ƠI, CHẠY ĐI')
             ->value('id');
 
         $book3 = DB::table('books')
-            ->where('title', 'Đắc Nhân Tâm')
+            ->where('title', 'PHÍA SAU NGHI CAN X')
             ->value('id');
-
         DB::table('reviews')->updateOrInsert(
             [
                 'user_id' => $customer1,

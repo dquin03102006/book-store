@@ -22,17 +22,16 @@ class CartItemSeeder extends Seeder
             ->value('id');
 
         $book1 = DB::table('books')
-            ->where('title', 'Nhà Giả Kim')
+            ->where('title', 'BÀ BÁC KHỦNG KHIẾP')
             ->value('id');
 
         $book2 = DB::table('books')
-            ->where('title', 'Lập Trình Python Cơ Bản')
+            ->where('title', 'MUN ƠI, CHẠY ĐI')
             ->value('id');
 
         $book3 = DB::table('books')
-            ->where('title', 'English Grammar in Use')
+            ->where('title', 'PHÍA SAU NGHI CAN X')
             ->value('id');
-
         DB::table('cart_items')->updateOrInsert(
             [
                 'user_id' => $customer1,
