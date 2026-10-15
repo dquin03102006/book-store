@@ -1,25 +1,24 @@
+<?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 // Trang chủ
-get('/', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
-// Nhóm route cần đăng nhập
-Route::middleware(['auth'])->group(function () {
-    // Thanh toán
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::get('/order-success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
+// Luồng Đăng ký tài khoản
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
 
-    // Lịch sử đơn hàng
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+// Luồng Thanh toán (Checkout)
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
 
-    // Thông tin cá nhân (Profile)
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-});
+// Luồng Lịch sử đơn hàng (Orders)
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
