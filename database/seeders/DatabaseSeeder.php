@@ -17,14 +17,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
-            CategorySeeder::class,
-            BookSeeder::class,
-            UserSeeder::class,
-            CouponSeeder::class,
-            OrderSeeder::class,
-            ReviewSeeder::class,
-            CartItemSeeder::class,
-            FaqSeeder::class,
-        ]);
+    CategorySeeder::class,
+    UserSeeder::class,
+    BookSeeder::class,
+    CouponSeeder::class,
+    OrderSeeder::class,
+    ReviewSeeder::class,
+    CartItemSeeder::class,
+    FaqSeeder::class,
+]);
     }
 }
