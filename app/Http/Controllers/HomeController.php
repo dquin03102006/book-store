@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -51,17 +52,72 @@ class HomeController extends Controller
 
         return view('categories', compact('categories'));
     }
-    public function category($id)
+
+    public function category(Request $request, $id)
     {
         $category = Category::findOrFail($id);
 
-        $books = Book::where('category_id', $id)
-            ->latest()
-            ->limit(10)
-            ->get();
+        $query = Book::where('category_id', $id);
+
+        $keyword = trim($request->input('keyword', ''));
+
+        if ($keyword !== '') {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                    ->orWhere('author', 'like', '%' . $keyword . '%');
+            });
+        }
+
+
+        // Lọc theo khoảng giá
+        switch ($request->input('price')) {
+            case 'under100':
+                $query->where('price', '<', 100000);
+                break;
+
+            case '100to150':
+                $query->whereBetween('price', [100000, 150000]);
+                break;
+
+            case 'over150':
+                $query->where('price', '>', 150000);
+                break;
+        }
+
+        // Sắp xếp sách
+        switch ($request->input('sort', 'latest')) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+
+            default:
+                $query->latest();
+                break;
+        }
+
+        // Chỉ giới hạn 10 cuốn khi hiển thị danh sách
+        $books = $query->limit(10)->get();
 
         $categories = Category::all();
 
         return view('category', compact('books', 'category', 'categories'));
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = trim($request->input('keyword', ''));
+
+        $books = Book::where('title', 'like', '%' . $keyword . '%')
+            ->orWhere('author', 'like', '%' . $keyword . '%')
+            ->latest()
+            ->get();
+
+        $categories = Category::all();
+
+        return view('search', compact('books', 'categories', 'keyword'));
     }
 }

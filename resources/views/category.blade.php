@@ -117,7 +117,27 @@
             cursor: pointer;
         }
 
-        .cart-icon,
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -9px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 50%;
+            background: #e53935;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 18px;
+            text-align: center;
+        }
+
         .user-icon {
             color: #212842;
             display: flex;
@@ -213,6 +233,58 @@
         .detail-btn:hover {
             background: #405078;
         }
+
+        .book-link {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .book-link h3 {
+            margin-top: 12px;
+        }
+
+        .book-link:hover h3 {
+            color: #405078;
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .product-actions form {
+            width: 100%;
+            margin: 0;
+        }
+
+        .product-actions button {
+            width: 100%;
+            padding: 10px 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .product-actions .add-cart-btn {
+            background: #fff;
+            color: #212842;
+            border: 1px solid #212842;
+        }
+
+        .product-actions .buy-now-btn {
+            background: #212842;
+            color: #fff;
+        }
+
+        .product-actions button:hover {
+            opacity: 0.85;
+        }
+
 
         footer {
             background: #212842;
@@ -482,14 +554,21 @@
             @endauth
         </nav>
 
-        <form class="search-form" action="/" method="GET">
+        <form class="search-form"
+            action="{{ url('/danh-muc/' . $category->id) }}"
+            method="GET">
+
             <input type="text" name="keyword"
+                value="{{ request('keyword') }}"
                 placeholder="Tìm tên sách hoặc tác giả...">
+
+            <input type="hidden" name="price" value="{{ request('price') }}">
+            <input type="hidden" name="sort" value="{{ request('sort', 'latest') }}">
+
             <button type="submit">Tìm kiếm</button>
         </form>
 
-
-        <a href="#" class="cart-icon" title="Giỏ hàng">
+        <a href="{{ route('cart.index') }}" class="cart-icon" title="Giỏ hàng">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -497,16 +576,32 @@
                 <circle cx="19" cy="20" r="1"></circle>
                 <path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"></path>
             </svg>
+
+            @php
+            $cartCount = collect(session('cart', []))->sum('quantity');
+            @endphp
+
+            @if ($cartCount > 0)
+            <span class="cart-count" id="cart-count">{{ $cartCount }}</span>
+            @else
+            <span class="cart-count" id="cart-count" style="display: none;">0</span>
+            @endif
         </a>
 
-        <a href="#" class="user-icon" title="Đăng nhập">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="user-icon" title="Tài khoản">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="25" height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
                 <circle cx="12" cy="8" r="4"></circle>
                 <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
             </svg>
         </a>
+
 
     </header>
 
@@ -546,15 +641,18 @@
         </form>
 
 
+
         <div class="product-list">
             @forelse ($books as $book)
             <div class="product">
-                <img
-                    src="{{ asset('images/books/' . $book->image) }}"
-                    alt="{{ $book->title }}"
-                    class="book-image">
+                <a href="{{ url('/book/' . $book->id) }}" class="book-link">
+                    <img
+                        src="{{ asset('images/books/' . $book->image) }}"
+                        alt="{{ $book->title }}"
+                        class="book-image">
 
-                <h3>{{ $book->title }}</h3>
+                    <h3>{{ $book->title }}</h3>
+                </a>
 
                 <p class="author">{{ $book->author }}</p>
 
@@ -562,14 +660,35 @@
                     {{ number_format($book->price, 0, ',', '.') }} VNĐ
                 </p>
 
-                <a class="detail-btn" href="/book/{{ $book->id }}">
-                    Xem chi tiết
-                </a>
+                <div class="product-actions">
+                    <form action="{{ route('cart.add', $book->id) }}"
+                        method="POST" class="ajax-cart-form">
+                        @csrf
+                        <input type="hidden" name="quantity" value="1">
+
+                        <button type="submit" class="add-cart-btn">
+                            Thêm vào giỏ
+                        </button>
+                    </form>
+
+                    <form action="{{ route('cart.add', $book->id) }}"
+                        method="POST">
+                        @csrf
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="buy_now" value="1">
+
+                        <button type="submit" class="buy-now-btn">
+                            Mua ngay
+                        </button>
+                    </form>
+                </div>
             </div>
             @empty
             <p>Danh mục này chưa có sách.</p>
             @endforelse
         </div>
+    </main>
+
     </main>
 
     <footer>
@@ -588,6 +707,7 @@
                 <a href="/">Trang chủ</a>
                 <a href="/gioi-thieu">Giới thiệu</a>
                 <a href="/">Sản phẩm</a>
+                <a href="{{ route('support.index') }}">Liên hệ</a>
             </div>
 
             <div class="footer-column">
@@ -610,7 +730,51 @@
             © {{ date('Y') }} Tiệm Sách Nhỏ. All rights reserved.
         </div>
     </footer>
+    <script>
+        document.querySelectorAll('.ajax-cart-form').forEach(form => {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
 
+                const button = form.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Không thể thêm sách vào giỏ hàng.');
+                    }
+
+                    const data = await response.json();
+                    const count = document.getElementById('cart-count');
+
+                    if (count && data.cart_count !== undefined) {
+                        count.textContent = data.cart_count;
+                        count.style.display = 'inline-block';
+                    } else {
+                        location.reload();
+                    }
+
+                    button.textContent = 'Đã thêm!';
+                    setTimeout(() => {
+                        button.textContent = 'Thêm vào giỏ';
+                    }, 1200);
+
+                } catch (error) {
+                    alert('Có lỗi khi thêm sách. Mày thử lại nha!');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

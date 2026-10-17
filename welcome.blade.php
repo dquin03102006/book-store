@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Book Store</title>
+    <title>Tiệm Sách Nhỏ</title>
 </head>
 <body>
 
@@ -10,7 +10,7 @@
         <p style="color: green">{{ session('success') }}</p>
     @endif
 
-    <h1>Book Store</h1>
+    <h1>Tiệm Sách Nhỏ</h1>
 
     @auth
         <p>Xin chào, {{ auth()->user()->name }}</p>

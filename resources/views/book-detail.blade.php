@@ -770,7 +770,7 @@
                 <path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"></path>
             </svg>
         </a>
-        <a href="#" class="user-icon" title="Đăng nhập">
+        <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="user-icon" title="Tài khoản">
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="25" height="25"
                 viewBox="0 0 24 24"
@@ -852,17 +852,39 @@
                     </div>
                 </div>
 
-                <div class="purchase-actions">
-                    {{-- Chờ nối route giỏ hàng của TV2 --}}
-                    <button type="button" class="purchase-btn add-cart-btn">
-                        Thêm vào giỏ hàng
-                    </button>
 
-                    {{-- Chờ nối chức năng mua ngay của TV2 --}}
-                    <button type="button" class="purchase-btn buy-now-btn">
-                        Mua ngay
-                    </button>
+                <div class="purchase-actions">
+                    <form action="{{ route('cart.add', $book->id) }}" method="POST">
+                        @csrf
+
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            id="cart-quantity"
+                            value="1">
+
+                        <button type="submit" class="purchase-btn add-cart-btn">
+                            Thêm vào giỏ hàng
+                        </button>
+                    </form>
+
+                    <form action="{{ route('cart.add', $book->id) }}" method="POST">
+                        @csrf
+
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            id="buy-now-quantity"
+                            value="1">
+
+                        <input type="hidden" name="buy_now" value="1">
+
+                        <button type="submit" class="purchase-btn buy-now-btn">
+                            Mua ngay
+                        </button>
+                    </form>
                 </div>
+
 
                 <p class="purchase-note">
                     Chọn cuốn sách bạn yêu thích và lưu lại những phút giây đọc sách duiiiii.
@@ -909,7 +931,7 @@
 
             @auth
             <div class="review-form">
-                <h3>Viết đánh giá của mày</h3>
+                <h3>Viết đánh giá của bạn</h3>
 
                 <form action="/review" method="POST">
                     @csrf
@@ -989,6 +1011,7 @@
             © {{ date('Y') }} TIỆM SÁCH NHỎ. All rights reserved.
         </div>
     </footer>
+
     <script>
         function changeQuantity(change) {
             const input = document.getElementById('quantity');
@@ -999,18 +1022,37 @@
             }
 
             input.value = Math.max(1, value + change);
+            syncCartQuantity();
         }
 
-        document.getElementById('quantity').addEventListener('change', function() {
-            let value = parseInt(this.value, 10);
+        function syncCartQuantity() {
+            const input = document.getElementById('quantity');
+            const cartInput = document.getElementById('cart-quantity');
+
+            let value = parseInt(input.value, 10);
 
             if (!Number.isInteger(value) || value < 1) {
                 value = 1;
+                input.value = 1;
             }
 
-            this.value = value;
-        });
+            if (cartInput) {
+                cartInput.value = value;
+            }
+
+            const buyNowInput = document.getElementById('buy-now-quantity');
+
+            if (buyNowInput) {
+                buyNowInput.value = value;
+            }
+        }
+
+        document.getElementById('quantity').addEventListener('input', syncCartQuantity);
+        document.getElementById('quantity').addEventListener('change', syncCartQuantity);
+
+        syncCartQuantity();
     </script>
+
 </body>
 
 </html>

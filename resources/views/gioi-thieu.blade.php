@@ -144,6 +144,23 @@
 
         .cart-icon {
             margin-left: 5px;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -9px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 50%;
+            background: #e53935;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 18px;
+            text-align: center;
         }
 
         .user-icon {
@@ -493,6 +510,19 @@
             color: #555555;
         }
 
+        .about-hero-image {
+            width: 100%;
+            height: 330px;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .about-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
         /* HERO BOX */
 
@@ -902,6 +932,21 @@
         .dropdown:focus-within .dropdown-menu {
             display: block;
         }
+
+        .about-commitment-image {
+            width: 100%;
+            height: 350px;
+            margin-top: 80px;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .about-commitment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
     </style>
 </head>
 
@@ -909,8 +954,8 @@
 
     <!-- ================= HEADER ================= -->
 
-    <header>
 
+    <header>
         <div class="logo">
             <a href="/">
                 <img src="{{ asset('images/logo.png') }}" alt="Tiệm sách nhỏ">
@@ -919,7 +964,7 @@
 
         <nav>
             <a href="/">Trang chủ</a>
-            <a href="/gioi-thieu">Giới thiệu</a>
+            <a href="{{ url('/gioi-thieu') }}">Giới thiệu</a>
 
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle">Danh mục ▾</a>
@@ -931,47 +976,41 @@
                     @endforeach
                 </div>
             </div>
-
         </nav>
 
         <form class="search-form" action="/" method="GET">
             <input
                 type="text"
                 name="keyword"
+                value="{{ request('keyword') }}"
                 placeholder="Tìm tên sách hoặc tác giả...">
-
-            <button type="submit">
-                Tìm kiếm
-            </button>
+            <button type="submit">Tìm kiếm</button>
         </form>
 
-        <!-- Giỏ hàng -->
-        <a href="#" class="cart-icon" title="Giỏ hàng">
+        @php
+        $cartCount = collect(session('cart', []))->sum('quantity');
+        @endphp
 
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="25"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
+        <a href="{{ route('cart.index') }}" class="cart-icon" title="Giỏ hàng">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="25" height="25" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
 
+            @if ($cartCount > 0)
+            <span class="cart-count" id="cart-count">{{ $cartCount }}</span>
+            @else
+            <span class="cart-count" id="cart-count" style="display: none;">0</span>
+            @endif
         </a>
 
-        <!-- Đăng nhập -->
-        <a href="/login" class="user-icon" title="Đăng nhập">
-
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="25"
+        <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="user-icon" title="Tài khoản">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="25" height="25"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -981,11 +1020,8 @@
                 <circle cx="12" cy="8" r="4"></circle>
                 <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
             </svg>
-
         </a>
-
     </header>
-
 
     <!-- ================= CONTENT ================= -->
 
@@ -1013,14 +1049,8 @@
                 </p>
             </div>
 
-            <div class="about-hero-box">
-                <div class="hero-book-icon">BOOK</div>
-
-                <span>
-                    Đọc một trang hôm nay,
-                    <br>
-                    khám phá thêm một điều ngày mai.
-                </span>
+            <div class="about-hero-image">
+                <img src="{{ asset('images/about-banner.jpg') }}" alt="Không gian Tiệm sách nhỏ">
             </div>
 
         </section>
@@ -1135,27 +1165,9 @@
 
 
         <!-- CAM KẾT -->
-        <section class="about-commitment">
-
-            <div class="commitment-inner">
-
-                <span class="about-label">
-                    ĐIỀU CHÚNG TÔI TIN
-                </span>
-
-                <h2>
-                    “Mỗi cuốn sách đều có
-                    một câu chuyện đáng để mở ra.”
-                </h2>
-
-                <p>
-                    Vì vậy, Tiệm sách nhỏ không ngừng hoàn thiện trải nghiệm
-                    để việc tìm kiếm và lựa chọn sách trở nên đơn giản,
-                    thuận tiện và thú vị hơn mỗi ngày.
-                </p>
-
-            </div>
-
+        <section class="about-commitment-image">
+            <img src="{{ asset('images/about1-banner.jpg') }}"
+                alt="Tiệm sách nhỏ">
         </section>
 
 
@@ -1226,7 +1238,7 @@
 
                 <a href="#">Chính sách mua hàng</a>
                 <a href="#">Chính sách đổi trả</a>
-                <a href="#">Liên hệ</a>
+                <a href="{{ route('support.index') }}">Liên hệ</a>
 
             </div>
 

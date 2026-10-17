@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết đơn hàng - Book Store</title>
+    <title>Chi tiết đơn hàng - Tiệm Sách Nhỏ</title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background: #FFF3E5; color: #37192C; }
         .wrap { max-width: 860px; margin: 30px auto; padding: 0 16px; }

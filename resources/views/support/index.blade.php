@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hỗ trợ khách hàng - Book Store</title>
+    <title>Hỗ trợ khách hàng - Tiệm Sách Nhỏ</title>
 
     <style>
         * {
