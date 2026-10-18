@@ -705,9 +705,10 @@
             <div class="footer-column">
                 <h3>Liên kết</h3>
                 <a href="/">Trang chủ</a>
+                <a href="{{ route('cart.index') }}">Giỏ hàng</a>
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
                 <a href="/gioi-thieu">Giới thiệu</a>
-                <a href="/">Sản phẩm</a>
-                <a href="{{ route('support.index') }}">Liên hệ</a>
+                <a href="{{ route('support.index') }}">Hỗ trợ</a>
             </div>
 
             <div class="footer-column">
@@ -720,9 +721,13 @@
             </div>
 
             <div class="footer-column">
+
                 <h3>Liên hệ</h3>
-                <p>Tiệm Sách Nhỏ</p>
-                <p>Đồng hành cùng bạn qua từng trang sách.</p>
+
+                <p>Email: tiemsachnho@gmail.com</p>
+                <p>Điện thoại: 0900 123 456</p>
+                <p>TP. Hồ Chí Minh, Việt Nam</p>
+
             </div>
         </div>
 

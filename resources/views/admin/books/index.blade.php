@@ -32,7 +32,7 @@
                     <td>{{ $b->id }}</td>
                     <td>
                         @if($b->image)
-                            <img src="{{ asset('storage/'.$b->image) }}" alt="" style="width:40px;height:56px;object-fit:cover">
+                            <img src="{{ asset('images/books/'.basename($b->image)) }}" alt="" style="width:40px;height:56px;object-fit:cover">
                         @endif
                     </td>
                     <td>{{ $b->title }}</td>

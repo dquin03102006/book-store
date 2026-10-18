@@ -14,7 +14,7 @@
         <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
             <option value="">-- Chọn danh mục --</option>
             @foreach($categories as $c)
-                <option value="{{ $c->id }}" @selected(old('category_id', $book->category_id) == $c->id)>{{ $c->name }}</option>
+            <option value="{{ $c->id }}" @selected(old('category_id', $book->category_id) == $c->id)>{{ $c->name }}</option>
             @endforeach
         </select>
         @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -54,7 +54,11 @@
     <div class="mb-3">
         <label class="form-label">Ảnh bìa</label>
         @if($book->image)
-            <div class="mb-2"><img src="{{ asset('storage/'.$book->image) }}" alt="" style="height:120px"></div>
+        <div class="mb-2">
+            <img src="{{ asset('images/books/'.basename($book->image)) }}"
+                alt="Ảnh bìa sách"
+                style="height:120px; object-fit:cover">
+        </div>
         @endif
         <input type="file" name="image" accept="image/*" class="form-control @error('image') is-invalid @enderror">
         @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror

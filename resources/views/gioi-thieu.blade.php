@@ -1221,14 +1221,11 @@
 
 
             <div class="footer-column">
-
                 <h3>Liên kết</h3>
-
                 <a href="/">Trang chủ</a>
-                <a href="#">Sản phẩm</a>
-                <a href="#">Giỏ hàng</a>
-                <a href="/login">Đăng nhập</a>
-
+                <a href="{{ route('cart.index') }}">Giỏ hàng</a>
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
+                <a href="/gioi-thieu">Giới thiệu</a>
             </div>
 
 
@@ -1238,7 +1235,7 @@
 
                 <a href="#">Chính sách mua hàng</a>
                 <a href="#">Chính sách đổi trả</a>
-                <a href="{{ route('support.index') }}">Liên hệ</a>
+                <a href="{{ route('support.index') }}">Hộp thư</a>
 
             </div>
 

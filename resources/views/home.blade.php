@@ -1073,26 +1073,44 @@
             'images/banner/banner-6.jpg',
             'images/banner/banner-7.jpg',
             ];
-            $bannerFallbacks = $books->take(4)->values();
+
+            $activeBanners = $banners->values();
+            $bannerFallbacks = $books->take(7)->values();
             @endphp
 
             @for ($i = 0; $i < 7; $i++)
                 @php
-                $bannerFile=$bannerFiles[$i];
-                $fallbackImage=$bannerFallbacks->get($i)->image ?? null;
-                $imagePath = file_exists(public_path($bannerFile))
+                $banner=$activeBanners->get($i);
+                $bannerFile = $bannerFiles[$i];
+
+                $fallbackImage = $bannerFallbacks->get($i)->image ?? null;
+
+                $imagePath = $banner
+                ? asset('images/banners/' . basename($banner->image))
+                : (
+                file_exists(public_path($bannerFile))
                 ? asset($bannerFile)
-                : ($fallbackImage ? asset('images/books/' . $fallbackImage) : '');
+                : ($fallbackImage
+                ? asset('images/books/' . basename($fallbackImage))
+                : '')
+                );
+
+                $imageLink = $banner->link ?? null;
+                $imageAlt = $banner->title ?? 'Sách tại Tiệm Sách Nhỏ';
                 @endphp
 
                 <div class="hero-book hero-book-{{ $i + 1 }}">
                     @if ($imagePath)
-                    <img src="{{ $imagePath }}" alt="Banner {{ $i + 1 }}">
+                    @if ($imageLink)
+                    <a href="{{ $imageLink }}">
+                        <img src="{{ $imagePath }}" alt="{{ $imageAlt }}">
+                    </a>
+                    @else
+                    <img src="{{ $imagePath }}" alt="{{ $imageAlt }}">
+                    @endif
                     @endif
                 </div>
-                @endfor <!-- decorative floating pages -->
-                <div class="floating-page page-1"></div>
-                <div class="floating-page page-2"></div>
+                @endfor
         </div>
     </section>
 
@@ -1239,9 +1257,10 @@
             <div class="footer-column">
                 <h3>Liên kết</h3>
                 <a href="/">Trang chủ</a>
-                <a href="#">Sản phẩm</a>
-                <a href="#">Giỏ hàng</a>
-                <a href="#">Đăng nhập</a>
+                <a href="{{ route('cart.index') }}">Giỏ hàng</a>
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
+                <a href="/gioi-thieu">Giới thiệu</a>
+                <a href="{{ route('support.index') }}">Hỗ trợ</a>
             </div>
 
             <div class="footer-column">

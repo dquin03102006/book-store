@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Banner;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,17 @@ class HomeController extends Controller
             ->get();
 
         $categories = Category::all();
-        return view('home', compact('books', 'keyword', 'category', 'price', 'sort', 'categories'));
+        $banners = Banner::where('is_active', true)->latest()->get();
+
+        return view('home', compact(
+            'books',
+            'keyword',
+            'category',
+            'price',
+            'sort',
+            'categories',
+            'banners'
+        ));
     }
     public function categories()
     {

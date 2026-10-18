@@ -13,10 +13,10 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $books = Book::with('category')
-            ->when($request->q, fn ($query, $q) => $query->where(
-                fn ($w) => $w->where('title', 'like', "%$q%")->orWhere('author', 'like', "%$q%")
+            ->when($request->q, fn($query, $q) => $query->where(
+                fn($w) => $w->where('title', 'like', "%$q%")->orWhere('author', 'like', "%$q%")
             ))
-            ->when($request->category_id, fn ($query, $id) => $query->where('category_id', $id))
+            ->when($request->category_id, fn($query, $id) => $query->where('category_id', $id))
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -39,7 +39,12 @@ class BookController extends Controller
         $data = $this->validated($request);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('books', 'public');
+            $image = $request->file('image');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('images/books'), $imageName);
+
+            $data['image'] = $imageName;
         }
 
         Book::create($data);
@@ -60,8 +65,18 @@ class BookController extends Controller
         $data = $this->validated($request);
 
         if ($request->hasFile('image')) {
-            $this->deleteImage($book);
-            $data['image'] = $request->file('image')->store('books', 'public');
+            $oldImage = $book->image;
+
+            $image = $request->file('image');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('images/books'), $imageName);
+
+            $data['image'] = $imageName;
+
+            if ($oldImage && file_exists(public_path('images/books/' . basename($oldImage)))) {
+                unlink(public_path('images/books/' . basename($oldImage)));
+            }
         } else {
             unset($data['image']);
         }

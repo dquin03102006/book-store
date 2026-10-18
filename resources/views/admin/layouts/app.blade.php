@@ -14,8 +14,33 @@
             <h5 class="mb-4">Tiệm Sách Nhỏ Admin</h5>
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'fw-bold' : '' }}" href="{{ route('admin.dashboard') }}">Tổng quan</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('admin.statistics.*') ? 'fw-bold' : '' }}"
+                        href="{{ route('admin.statistics.index') }}">
+                        Thống kê
+                    </a>
+                </li>
                 <li class="nav-item"><a class="nav-link text-white {{ request()->routeIs('admin.books.*') ? 'fw-bold' : '' }}" href="{{ route('admin.books.index') }}">Sản phẩm</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->is('admin/orders*') ? 'fw-bold' : '' }}"
+                        href="{{ url('/admin/orders') }}">
+                        Đơn hàng
+                    </a>
+                </li>
+
                 <li class="nav-item"><a class="nav-link text-white {{ request()->routeIs('admin.categories.*') ? 'fw-bold' : '' }}" href="{{ route('admin.categories.index') }}">Danh mục</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('admin.banners.*') ? 'fw-bold' : '' }}"
+                        href="{{ route('admin.banners.index') }}">
+                        Banner
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('admin.news.*') ? 'fw-bold' : '' }}"
+                        href="{{ route('admin.news.index') }}">
+                        Tin tức/bài viết
+                    </a>
+                </li>
                 <li class="nav-item"><a class="nav-link text-white {{ request()->routeIs('admin.customers.*') ? 'fw-bold' : '' }}" href="{{ route('admin.customers.index') }}">Khách hàng</a></li>
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->routeIs('admin.support-messages.*') ? 'fw-bold' : '' }}"

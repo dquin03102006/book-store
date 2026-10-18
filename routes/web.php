@@ -16,6 +16,9 @@ use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SupportMessageController;
+use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\NewsController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/tim-kiem', [HomeController::class, 'search'])->name('books.search');
@@ -45,15 +48,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('categories', CategoryController::class)->except('show');
         Route::resource('books', AdminBookController::class)->except('show');
+        Route::resource('banners', BannerController::class)->except('show');
         Route::resource('customers', CustomerController::class)->parameters(['customers' => 'user']);
 
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
         Route::get('orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
         Route::patch('orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     });
 
     Route::middleware('role:admin')->group(function () {
         Route::resource('staff', StaffController::class)->except('show')->parameters(['staff' => 'user']);
+        Route::resource('news', NewsController::class)->except('show');
     });
 });
 // Checkout - Thanh toán
