@@ -10,8 +10,12 @@
 
 <body class="bg-light">
     <div class="d-flex" style="min-height:100vh">
-        <aside class="bg-dark text-white p-3" style="width:240px">
-            <h5 class="mb-4">Tiệm Sách Nhỏ Admin</h5>
+        <aside class="text-white p-3" style="width:240px; background-color:#212842;">
+            <a href="{{ url('/') }}" class="d-block text-center mb-4">
+                <img src="{{ asset('images/logofooter.png') }}"
+                    alt="Tiệm Sách Nhỏ"
+                    style="max-width: 170px; max-height: 80px; object-fit: contain;">
+            </a>
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'fw-bold' : '' }}" href="{{ route('admin.dashboard') }}">Tổng quan</a></li>
                 <li class="nav-item">
@@ -33,6 +37,12 @@
                     <a class="nav-link text-white {{ request()->routeIs('admin.banners.*') ? 'fw-bold' : '' }}"
                         href="{{ route('admin.banners.index') }}">
                         Banner
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('admin.about.*') ? 'fw-bold' : '' }}"
+                        href="{{ route('admin.about.edit') }}">
+                        Giới thiệu
                     </a>
                 </li>
                 <li class="nav-item">

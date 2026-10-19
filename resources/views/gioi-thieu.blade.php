@@ -965,7 +965,7 @@
         <nav>
             <a href="/">Trang chủ</a>
             <a href="{{ url('/gioi-thieu') }}">Giới thiệu</a>
-
+            <a href="{{ route('news.public.index') }}">Tin tức</a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle">Danh mục ▾</a>
                 <div class="dropdown-menu">
@@ -976,6 +976,11 @@
                     @endforeach
                 </div>
             </div>
+            @auth
+            @if(auth()->user()->role === 'admin')
+            <a href="/admin">Quản trị</a>
+            @endif
+            @endauth
         </nav>
 
         <form class="search-form" action="/" method="GET">
@@ -1031,26 +1036,19 @@
         <section class="about-hero">
 
             <div class="about-hero-text">
-                <span class="about-label">VỀ TIỆM SÁCH NHỎ</span>
+                <span class="about-label">{{ $about->hero_label ?? 'VỀ TIỆM SÁCH NHỎ' }}</span>
 
-                <h1>
-                    Một cuốn sách hay,
-                    <br>
-                    một góc nhỏ,
-                    <br>
-                    một cảm hứng mới.
-                </h1>
+                <h1>{{ $about->hero_title ?? 'Một cuốn sách hay, một góc nhỏ, một cảm hứng mới.' }}</h1>
 
                 <p>
-                    Tiệm sách nhỏ được tạo ra với mong muốn mang những cuốn sách
-                    phù hợp đến gần hơn với mọi người. Từ những trang sách quen thuộc
-                    đến những câu chuyện mới mẻ, mỗi cuốn sách đều có thể mở ra
-                    một góc nhìn khác về cuộc sống.
+                    {{ $about->hero_description ?? 'Tiệm sách nhỏ được tạo ra với mong muốn mang những cuốn sách phù hợp đến gần hơn với mọi người. Từ những trang sách quen thuộc đến những câu chuyện mới mẻ, mỗi cuốn sách đều có thể mở ra một góc nhìn khác về cuộc sống.' }}
                 </p>
             </div>
 
             <div class="about-hero-image">
-                <img src="{{ asset('images/about-banner.jpg') }}" alt="Không gian Tiệm sách nhỏ">
+                <img
+                    src="{{ !empty($about->hero_image) ? asset('images/about/' . basename($about->hero_image)) : asset('images/about-banner.jpg') }}"
+                    alt="Không gian Tiệm sách nhỏ">
             </div>
 
         </section>
@@ -1060,8 +1058,8 @@
         <section class="about-story">
 
             <div class="section-heading">
-                <span>CÂU CHUYỆN CỦA CHÚNG TÔI</span>
-                <h2>Không chỉ là nơi bán sách</h2>
+                <span>{{ $about->story_label ?? 'CÂU CHUYỆN CỦA CHÚNG TÔI' }}</span>
+                <h2>{{ $about->story_title ?? 'Không chỉ là nơi bán sách' }}</h2>
             </div>
 
             <div class="story-content">
@@ -1071,19 +1069,8 @@
                 </div>
 
                 <div class="story-text">
-
-                    <p>
-                        Tiệm sách nhỏ bắt đầu từ một ý tưởng rất đơn giản:
-                        tạo ra một không gian nơi mọi người có thể dễ dàng tìm kiếm
-                        và lựa chọn những cuốn sách mà mình yêu thích.
-                    </p>
-
-                    <p>
-                        Chúng tôi tin rằng sách không chỉ cung cấp kiến thức,
-                        mà còn mang đến cảm hứng, giúp mỗi người có thêm một góc nhìn,
-                        một câu chuyện hoặc một động lực mới trong hành trình của mình.
-                    </p>
-
+                    <p>{!! nl2br(e($about->story_content ?? 'Tiệm sách nhỏ bắt đầu từ một ý tưởng rất đơn giản: tạo ra một không gian nơi mọi người có thể dễ dàng tìm kiếm và lựa chọn những cuốn sách mà mình yêu thích.
+                        Chúng tôi tin rằng sách không chỉ cung cấp kiến thức, mà còn mang đến cảm hứng, giúp mỗi người có thêm một góc nhìn, một câu chuyện hoặc một động lực mới trong hành trình của mình.')) !!}</p>
                 </div>
 
             </div>
@@ -1091,107 +1078,83 @@
         </section>
 
 
-        <!-- GIÁ TRỊ -->
+                <!-- GIÁ TRỊ -->
         <section class="about-values">
 
             <div class="section-heading center">
-                <span>GIÁ TRỊ CỦA TIỆM</span>
+                <span>{{ $about->values_label ?? 'GIÁ TRỊ CỦA TIỆM' }}</span>
 
-                <h2>
-                    Những điều chúng tôi hướng đến
-                </h2>
+                <h2>{{ $about->values_title ?? 'Những điều chúng tôi hướng đến' }}</h2>
 
                 <p>
-                    Mỗi trải nghiệm nhỏ đều góp phần tạo nên một tiệm sách
-                    gần gũi và đáng tin cậy hơn.
+                    {{ $about->values_description ?? 'Mỗi trải nghiệm nhỏ đều góp phần tạo nên một tiệm sách gần gũi và đáng tin cậy hơn.' }}
                 </p>
             </div>
-
 
             <div class="values-grid">
 
                 <div class="value-card">
+                    <div class="value-number">01</div>
 
-                    <div class="value-number">
-                        01
-                    </div>
-
-                    <h3>Đa dạng lựa chọn</h3>
+                    <h3>{{ $about->value1_title ?? 'Đa dạng lựa chọn' }}</h3>
 
                     <p>
-                        Từ văn học, truyện, kỹ năng đến sách học tập và phát triển
-                        bản thân, Tiệm sách nhỏ hướng đến một danh mục sách đa dạng
-                        để phù hợp với nhiều nhu cầu khác nhau.
+                        {{ $about->value1_content ?? 'Từ văn học, truyện, kỹ năng đến sách học tập và phát triển bản thân, Tiệm sách nhỏ hướng đến một danh mục sách đa dạng để phù hợp với nhiều nhu cầu khác nhau.' }}
                     </p>
-
                 </div>
 
-
                 <div class="value-card">
+                    <div class="value-number">02</div>
 
-                    <div class="value-number">
-                        02
-                    </div>
-
-                    <h3>Dễ dàng tìm kiếm</h3>
+                    <h3>{{ $about->value2_title ?? 'Dễ dàng tìm kiếm' }}</h3>
 
                     <p>
-                        Tìm sách theo tên, tác giả, thể loại hoặc mức giá một cách
-                        nhanh chóng, giúp bạn tiết kiệm thời gian và dễ dàng
-                        tìm được cuốn sách phù hợp.
+                        {{ $about->value2_content ?? 'Tìm sách theo tên, tác giả, thể loại hoặc mức giá một cách nhanh chóng, giúp bạn tiết kiệm thời gian và dễ dàng tìm được cuốn sách phù hợp.' }}
                     </p>
-
                 </div>
 
-
                 <div class="value-card">
+                    <div class="value-number">03</div>
 
-                    <div class="value-number">
-                        03
-                    </div>
-
-                    <h3>Trải nghiệm thân thiện</h3>
+                    <h3>{{ $about->value3_title ?? 'Trải nghiệm thân thiện' }}</h3>
 
                     <p>
-                        Giao diện đơn giản, rõ ràng và dễ sử dụng để việc khám phá,
-                        xem thông tin và lựa chọn sách trở nên nhẹ nhàng hơn.
+                        {{ $about->value3_content ?? 'Giao diện đơn giản, rõ ràng và dễ sử dụng để việc khám phá, xem thông tin và lựa chọn sách trở nên nhẹ nhàng hơn.' }}
                     </p>
-
                 </div>
 
             </div>
 
         </section>
 
-
-        <!-- CAM KẾT -->
+                <!-- CAM KẾT -->
         <section class="about-commitment-image">
-            <img src="{{ asset('images/about1-banner.jpg') }}"
+            <img
+                src="{{ !empty($about->section_image) ? asset('images/about/' . basename($about->section_image)) : asset('images/about1-banner.jpg') }}"
                 alt="Tiệm sách nhỏ">
         </section>
 
-
-        <!-- THÔNG TIN -->
+                <!-- THÔNG TIN -->
         <section class="about-info">
 
             <div>
-                <span>ĐỐI TƯỢNG</span>
-                <strong>Người yêu sách</strong>
+                <span>{{ $about->info1_label ?? 'ĐỐI TƯỢNG' }}</span>
+                <strong>{{ $about->info1_value ?? 'Người yêu sách' }}</strong>
             </div>
 
             <div>
-                <span>THỂ LOẠI</span>
-                <strong>Đa dạng</strong>
+                <span>{{ $about->info2_label ?? 'THỂ LOẠI' }}</span>
+                <strong>{{ $about->info2_value ?? 'Đa dạng' }}</strong>
             </div>
 
             <div>
-                <span>TRẢI NGHIỆM</span>
-                <strong>Đơn giản & thuận tiện</strong>
+                <span>{{ $about->info3_label ?? 'TRẢI NGHIỆM' }}</span>
+                <strong>{{ $about->info3_value ?? 'Đơn giản & thuận tiện' }}</strong>
             </div>
 
             <div>
-                <span>ĐỊNH HƯỚNG</span>
-                <strong>Gần gũi & tin cậy</strong>
+                <span>{{ $about->info4_label ?? 'ĐỊNH HƯỚNG' }}</span>
+                <strong>{{ $about->info4_value ?? 'Gần gũi & tin cậy' }}</strong>
             </div>
 
         </section>
@@ -1226,6 +1189,7 @@
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
                 <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
                 <a href="/gioi-thieu">Giới thiệu</a>
+                <a href="{{ route('news.public.index') }}">Tin tức</a>
             </div>
 
 

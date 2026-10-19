@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
@@ -13,12 +12,15 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\NewsController as PublicNewsController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SupportMessageController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\AboutPageController;
+use App\Models\AboutPage;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/tim-kiem', [HomeController::class, 'search'])->name('books.search');
@@ -26,7 +28,9 @@ Route::get('/danh-muc/{id}', [HomeController::class, 'category']);
 
 Route::get('/gioi-thieu', function () {
     $categories = DB::table('categories')->get();
-    return view('gioi-thieu', compact('categories'));
+    $about = AboutPage::first();
+
+    return view('gioi-thieu', compact('categories', 'about'));
 });
 
 Route::get('/book/{id}', [BookController::class, 'show']);
@@ -60,6 +64,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::resource('staff', StaffController::class)->except('show')->parameters(['staff' => 'user']);
         Route::resource('news', NewsController::class)->except('show');
+
+        // Quản lý trang Giới thiệu
+        Route::get('about', [AboutPageController::class, 'edit'])
+            ->name('about.edit');
+
+        Route::put('about', [AboutPageController::class, 'update'])
+            ->name('about.update');
     });
 });
 // Checkout - Thanh toán
@@ -117,5 +128,13 @@ Route::get('/support', [SupportController::class, 'index'])
 
 Route::post('/support', [SupportController::class, 'store'])
     ->name('support.store');
+
+// Tin tức/bài viết
+Route::get('/tin-tuc', [PublicNewsController::class, 'index'])
+    ->name('news.public.index');
+
+Route::get('/tin-tuc/{id}', [PublicNewsController::class, 'show'])
+    ->name('news.public.show');
+    
 // Nạp route đăng nhập, đăng ký và đăng xuất của TV3
 require __DIR__ . '/auth.php';

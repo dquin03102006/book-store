@@ -989,6 +989,7 @@
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
                 <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
                 <a href="/gioi-thieu">Giới thiệu</a>
+                <a href="{{ route('news.public.index') }}">Tin tức</a>
             </div>
 
             <div class="footer-column">

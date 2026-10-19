@@ -959,7 +959,7 @@
         <nav>
             <a href="/">Trang chủ</a>
             <a href="/gioi-thieu">Giới thiệu</a>
-
+            <a href="{{ route('news.public.index') }}">Tin tức</a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle">Danh mục ▾</a>
                 <div class="dropdown-menu">
@@ -1260,14 +1260,14 @@
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
                 <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"> Tài khoản </a>
                 <a href="/gioi-thieu">Giới thiệu</a>
-                <a href="{{ route('support.index') }}">Hỗ trợ</a>
+                <a href="{{ route('news.public.index') }}">Tin tức</a>
             </div>
 
             <div class="footer-column">
                 <h3>Hỗ trợ</h3>
                 <a href="#">Chính sách mua hàng</a>
                 <a href="#">Chính sách đổi trả</a>
-                <a href="{{ route('support.index') }}">Liên hệ</a>
+                <a href="{{ route('support.index') }}">Hộp thư</a>
             </div>
 
             <div class="footer-column">
