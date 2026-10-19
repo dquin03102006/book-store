@@ -199,26 +199,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(145deg, #f0f5fa, #e5edf6);
-            border-radius: 20px;
+            background: transparent;
+            border-radius: 0;
             overflow: hidden;
-        }
-
-        .book-cover::before {
-            content: "";
-            position: absolute;
-            width: 230px;
-            height: 230px;
-            border: 1px solid rgba(33, 40, 66, 0.08);
-            border-radius: 50%;
         }
 
         .book-cover img {
             position: relative;
             z-index: 1;
             display: block;
-            max-width: 100%;
-            max-height: 440px;
+            width: 100%;
+            max-width: 320px;
+            max-height: 500px;
             object-fit: contain;
             border-radius: 5px;
             filter: drop-shadow(0 14px 16px rgba(30, 35, 50, 0.18));
