@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -47,6 +48,13 @@ class HomeController extends Controller
         $categories = Category::all();
         $banners = Banner::where('is_active', true)->latest()->get();
 
+        $coupons = Coupon::where('is_active', true)
+            ->where('quantity', '>', 0)
+            ->where('start_at', '<=', now())
+            ->where('end_at', '>=', now())
+            ->latest()
+            ->get();
+
         return view('home', compact(
             'books',
             'keyword',
@@ -54,7 +62,8 @@ class HomeController extends Controller
             'price',
             'sort',
             'categories',
-            'banners'
+            'banners',
+            'coupons'
         ));
     }
     public function categories()

@@ -941,6 +941,125 @@
         .product-actions button:hover {
             opacity: 0.85;
         }
+
+        /* ================= VOUCHER ================= */
+        .voucher-section {
+            margin: 40px 0 40px 70px;
+            max-width: 1240px;
+            width: calc(100% - 60px);
+            padding: 0;
+            box-sizing: border-box;
+            color: #212842;
+            background: transparent;
+        }
+
+        .voucher-section::before {
+            display: none;
+        }
+
+        .voucher-header {
+            margin-bottom: 22px;
+        }
+
+        .voucher-label {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #BED9F4;
+            color: #212842;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .voucher-header h2 {
+            margin: 12px 0 8px;
+            font-size: 28px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .voucher-header p {
+            color: #777;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .voucher-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .voucher-card {
+            position: relative;
+            background: #fff;
+            color: #212842;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #BED9F4;
+            border-radius: 12px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .voucher-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(33, 40, 66, .08);
+        }
+
+        .voucher-tag {
+            display: inline-block;
+            background: #edf5fc;
+            color: #212842;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .voucher-card h3 {
+            margin: 12px 0 8px;
+            font-size: 21px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .voucher-card p {
+            margin: 0;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .voucher-card .voucher-expiry {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .voucher-empty {
+            color: #777;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .voucher-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .voucher-section {
+                margin: 30px auto;
+                padding: 0 16px;
+            }
+
+            .voucher-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .voucher-header h2 {
+                font-size: 24px;
+            }
+        }
     </style>
 
 
@@ -1111,6 +1230,52 @@
                     @endif
                 </div>
                 @endfor
+        </div>
+    </section>
+
+    <!-- Voucher -->
+    <section class="voucher-section">
+        <div class="voucher-header">
+            <div>
+                <span class="voucher-label">ƯU ĐÃI HÔM NAY</span>
+                <h2>Nhận ưu đãi khi mua sách</h2>
+                <p>Khám phá các mã giảm giá dành riêng cho bạn.</p>
+            </div>
+        </div>
+
+        <div class="voucher-grid">
+            @forelse ($coupons as $coupon)
+            <div class="voucher-card">
+                <span class="voucher-tag">
+                    @if ($coupon->discount_type === 'percent')
+                    {{ rtrim(rtrim(number_format($coupon->discount_value, 2, '.', ''), '0'), '.') }}%
+                    @else
+                    {{ number_format($coupon->discount_value, 0, ',', '.') }}đ
+                    @endif
+                </span>
+
+                <h3>{{ $coupon->code }}</h3>
+
+                <p>
+                    @if ($coupon->discount_type === 'percent')
+                    Giảm {{ rtrim(rtrim(number_format($coupon->discount_value, 2, '.', ''), '0'), '.') }}%
+                    @else
+                    Giảm {{ number_format($coupon->discount_value, 0, ',', '.') }}đ
+                    @endif
+
+                    cho đơn từ
+                    {{ number_format($coupon->min_order_amount, 0, ',', '.') }}đ.
+                </p>
+
+                <p class="voucher-expiry">
+                    Hạn dùng: {{ \Carbon\Carbon::parse($coupon->end_at)->format('d/m/Y') }}
+                </p>
+            </div>
+            @empty
+            <p class="voucher-empty">
+                Hiện chưa có mã giảm giá nào. Mày quay lại sau nha!
+            </p>
+            @endforelse
         </div>
     </section>
 
