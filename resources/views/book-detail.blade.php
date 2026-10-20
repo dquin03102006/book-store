@@ -193,15 +193,18 @@
         }
 
         .book-cover {
-            position: relative;
-            min-height: 480px;
-            padding: 35px;
+            position: sticky;
+            top: 20px;
+            align-self: start;
+            min-height: 0;
+            padding: 0 35px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             background: transparent;
             border-radius: 0;
-            overflow: hidden;
+            overflow: visible;
+            overflow: visible;
         }
 
         .book-cover img {
@@ -209,8 +212,8 @@
             z-index: 1;
             display: block;
             width: 100%;
-            max-width: 320px;
-            max-height: 500px;
+            max-width: 380px;
+            max-height: 580px;
             object-fit: contain;
             border-radius: 5px;
             filter: drop-shadow(0 14px 16px rgba(30, 35, 50, 0.18));
@@ -391,6 +394,38 @@
             border-top: 1px solid #eee9df;
         }
 
+        .description-content {
+            color: #626262;
+            font-size: 15px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+            max-height: 120px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .description-content.is-expanded {
+            max-height: none;
+        }
+
+        .description-toggle {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            color: #52698c;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .description-toggle:hover {
+            background: transparent;
+            color: #212842;
+        }
+
         .description h3 {
             margin: 0 0 13px;
             color: #212842;
@@ -545,36 +580,6 @@
             }
         }
 
-        /* FOOTER */
-        .footer {
-            background: #212842;
-            color: white;
-            padding: 38px 60px;
-        }
-
-        .footer-inner {
-            max-width: 1250px;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .footer img {
-            width: 150px;
-            max-width: 100%;
-        }
-
-        .footer p {
-            line-height: 1.8;
-            font-size: 14px;
-        }
-
-        .footer a:hover {
-            color: #BED9F4;
-        }
 
         @media (max-width: 950px) {
             .header {
@@ -594,10 +599,6 @@
 
             .book-cover {
                 min-height: 280px;
-            }
-
-            .footer {
-                padding: 30px 25px;
             }
         }
 
@@ -882,12 +883,22 @@
                     Chọn cuốn sách bạn yêu thích và lưu lại những phút giây đọc sách duiiiii.
                 </p>
 
+
                 <div class="description">
                     <h3>Giới thiệu sách</h3>
-                    <p>
-                        {{ $book->description ?: 'Nội dung giới thiệu cho cuốn sách này đang được cập nhật.' }}
-                    </p>
+
+                    <div class="description-content" id="bookDescription">
+                        {!! nl2br(e($book->description)) !!}
+                    </div>
+
+                    <button type="button"
+                        class="description-toggle"
+                        id="descriptionToggle"
+                        aria-expanded="false">
+                        Xem thêm
+                    </button>
                 </div>
+
             </div>
         </section>
         {{-- ĐÁNH GIÁ SÁCH --}}
@@ -1044,6 +1055,26 @@
         document.getElementById('quantity').addEventListener('change', syncCartQuantity);
 
         syncCartQuantity();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const description = document.getElementById('bookDescription');
+            const toggle = document.getElementById('descriptionToggle');
+
+            if (!description || !toggle) return;
+
+            if (description.scrollHeight <= 120) {
+                toggle.style.display = 'none';
+                return;
+            }
+
+            toggle.addEventListener('click', function() {
+                const expanded = description.classList.toggle('is-expanded');
+
+                toggle.textContent = expanded ? 'Thu gọn' : 'Xem thêm';
+                toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            });
+        });
     </script>
 
 </body>

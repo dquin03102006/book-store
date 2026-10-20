@@ -16,8 +16,8 @@ use Illuminate\View\View;
 
 class NewPasswordController extends Controller
 {
-    /**
-     * Display the password reset view.
+    /*
+     * Hiển thị giao diện đặt lại mật khẩu
      */
     public function create(Request $request): View
     {

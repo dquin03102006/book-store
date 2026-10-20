@@ -568,18 +568,17 @@
             margin-top: 50px;
             background: #212842;
             color: #FFF3E5;
-            padding: 45px 60px 20px;
+            padding: 45px 40px 20px;
             width: 100%;
             box-sizing: border-box;
-            overflow: hidden;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
-            gap: 40px;
+            grid-template-columns: 1.5fr 0.7fr 1fr 1.5fr;
+            gap: 50px;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             box-sizing: border-box;
         }
